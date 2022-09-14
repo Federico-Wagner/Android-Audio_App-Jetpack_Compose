@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SoundsApp</string>
+    <string name="send_error">Error while sending the audio file</string>
+</resources>
