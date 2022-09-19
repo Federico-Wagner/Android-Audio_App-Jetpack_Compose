@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.soundsapp">
 
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
 
     <application
         android:allowBackup="true"

@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.app.Activity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -26,11 +27,12 @@ import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.Sound
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.R
+import com.example.soundsapp.helpers.AudioPlayer
 import com.example.soundsapp.helpers.addNewAudio
 
 
 @Composable
-fun SoundApp(sounds: List<Sound>, player: (Int) -> Unit, modifier : Modifier = Modifier){
+fun SoundApp(sounds: List<Sound>, activity: Activity, modifier : Modifier = Modifier){
     Scaffold(
         modifier = modifier.fillMaxWidth(),
         topBar = {
@@ -49,9 +51,9 @@ fun SoundApp(sounds: List<Sound>, player: (Int) -> Unit, modifier : Modifier = M
         Column(
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
-            SoundsList(sounds, player)
+            SoundsList(sounds)
             Spacer(modifier = modifier.padding(top = 15.dp))
-            AddBtn()
+            AddBtn(activity)
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
                 style = MaterialTheme.typography.h6)
@@ -61,15 +63,14 @@ fun SoundApp(sounds: List<Sound>, player: (Int) -> Unit, modifier : Modifier = M
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SoundsList(sounds: List<Sound>, player: (Int) -> Unit) {
+fun SoundsList(sounds: List<Sound>) {
     LazyVerticalGrid(cells = GridCells.Fixed(2)){
-        items(sounds){sound -> SoundCard(sound, player)}
+        items(sounds){sound -> SoundCard(sound)}
     }
 }
 
 @Composable
 fun SoundCard(sound : Sound = Sound("Preview", 5),
-              player: (Int) -> Unit,
               modifier : Modifier = Modifier ) {
     val intentContext = LocalContext.current
     Card(modifier = Modifier
@@ -87,7 +88,7 @@ fun SoundCard(sound : Sound = Sound("Preview", 5),
                 Icon(Icons.Rounded.PlayArrow, contentDescription = "Play",
                     modifier = modifier
                         .clickable {
-                            player(sound.audioFile)
+                            AudioPlayer.play(sound, intentContext)
                         }
                         .size(55.dp)
                         .clip(RoundedCornerShape(50)),
@@ -103,7 +104,6 @@ fun SoundCard(sound : Sound = Sound("Preview", 5),
                     contentDescription = "share",
                     modifier = modifier
                         .clickable {
-                            println("playing")
                             shareSound(intentContext, sound)
                         }
                         .padding(10.dp)
@@ -114,14 +114,15 @@ fun SoundCard(sound : Sound = Sound("Preview", 5),
 }
 
 @Composable
-fun AddBtn(modifier : Modifier = Modifier){
+fun AddBtn(activity : Activity, modifier : Modifier = Modifier){
+    val intentContext = LocalContext.current
     Box(modifier = modifier
         .clip(RoundedCornerShape(50)),
     ){
         Icon(Icons.Rounded.Add,
             contentDescription = "Add Audio",
             modifier = modifier
-                .clickable { addNewAudio() }
+                .clickable { addNewAudio(intentContext, activity) }
                 .size(60.dp)
                 .border(width = 3.dp, color = Green200, shape = CircleShape)
         )
