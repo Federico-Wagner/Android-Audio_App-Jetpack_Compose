@@ -1,5 +1,6 @@
 package com.example.soundsapp.db.entity
 
+import android.net.Uri
 import androidx.room.*
 
 
@@ -7,7 +8,7 @@ import androidx.room.*
 data class Audio(
     @PrimaryKey(autoGenerate = true)
     var id: Long,
-    @ColumnInfo(name = "audio_name") var audioName: String,
+    @ColumnInfo(name = "audio_name") var audioURI: String,
     @ColumnInfo(name = "audio_file") var audioFile: String
 )
 //) {
