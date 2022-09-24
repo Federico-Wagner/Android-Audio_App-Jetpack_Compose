@@ -23,6 +23,7 @@ object MediaPlayerFW {
             PlayerState.PAUSE -> { this.play() }
             else -> { logger.log(Level.WARNING,"MediaPlayerFW - tap reached else output")}
         }
+//        this.player.isPlaying
     }
 
     fun setAndPlay(context: Context, audioUri : Uri?){

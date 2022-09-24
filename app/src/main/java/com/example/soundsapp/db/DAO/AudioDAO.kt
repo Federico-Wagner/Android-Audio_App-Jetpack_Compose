@@ -25,4 +25,5 @@ abstract class AudioDAO {
 
     @Delete
     abstract fun deleteByEntity(audio: Audio)
+
 }

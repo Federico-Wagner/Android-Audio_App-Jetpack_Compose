@@ -31,32 +31,35 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.soundsapp.helpers.AudioPlayer
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 import java.util.logging.Level
 import java.util.logging.Logger
 
+
 object addNewAudioScreenObjectStatus{
     var selectedAudioUri : Uri? = null
-    var selectedAudioName : String = "no name yet"
+    var selectedAudioUserName : String = "no name yet"
+    var selectedAudioFileName : String = ""
 
-    fun statusObjectClean(){
+    fun reset(){
         this.selectedAudioUri =  null
-        this.selectedAudioName = ""
+        this.selectedAudioUserName = ""
+        this.selectedAudioFileName = ""
     }
 }
 
-class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
+class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO search difference
     var logger = Logger.getLogger("AddAudioActivity-Loger")
 
-    val audioSearchBTN = fun(): String {
+    val audioSearchBTN = fun() {
         val intent = Intent()
         intent.type = "audio/*"
         intent.action = Intent.ACTION_GET_CONTENT
         resultLauncher.launch(intent)
-        return addNewAudioScreenObjectStatus.selectedAudioName
+//        return addNewAudioScreenObjectStatus.selectedAudioUserName
     }
 
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -70,40 +73,18 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
                 if (cursor != null && cursor.moveToFirst()) {
                     val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                     if (!cursor.isNull(nameIndex)) {
-                        addNewAudioScreenObjectStatus.selectedAudioName = cursor.getString(nameIndex)
+                        addNewAudioScreenObjectStatus.selectedAudioFileName = cursor.getString(nameIndex)
                     }
                 }
             } finally {
                 cursor?.close()
             }
-
-
-
-//        DataBase.insertInDB(result.data!!,audioName,applicationContext)
-//        println("RECOGNIZE ME")
-//        DataBase.showRecords()
-        }
-    }
-    val playSelectedBTN = fun(){
-        val audioUri: Uri? = addNewAudioScreenObjectStatus.selectedAudioUri
-        MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-            if (audioUri != null) {
-                setDataSource(applicationContext, audioUri)
-            }
-            prepare()
-            start()
         }
     }
 
     val saveBTN = fun(audioName : String) {
         saveAudioinDB(applicationContext)
-        addNewAudioScreenObjectStatus.statusObjectClean()
+        addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()
         goBackBTN()
     }
@@ -116,14 +97,23 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
     }
 
     fun saveAudioinDB(context: Context) {
-        MediaPlayerFW.logger.log(Level.INFO,"saveAudioinDB - ##########################################################")
-
-        println(addNewAudioScreenObjectStatus.selectedAudioName)
+        logger.log(Level.INFO,"saveAudioinDB - ##########################################################")
+        println(addNewAudioScreenObjectStatus.selectedAudioUserName)
         println(addNewAudioScreenObjectStatus.selectedAudioUri)
-        //get audio name from textbox
 
+        //get audio name from textbox
         //get audio uri
+        addNewAudioScreenObjectStatus
+
+        DataBase.insertInDB(
+            addNewAudioScreenObjectStatus.selectedAudioUserName,
+            addNewAudioScreenObjectStatus.selectedAudioFileName,
+            addNewAudioScreenObjectStatus.selectedAudioUri
+        )
+
+
         //generate Audio Entity object
+
         //persist Object in DB
 
 
@@ -131,13 +121,13 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
 
 
         //Clean addNewAudioScreenObjectStatus
-        addNewAudioScreenObjectStatus.statusObjectClean()
+        addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addNewAudioScreenObjectStatus.statusObjectClean()
+        addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()
         setContent {
             SoundsAppTheme(darkTheme = true) {
@@ -158,7 +148,7 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        addNewAudioScreenObjectStatus.statusObjectClean()
+        addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()
     }
 
@@ -170,14 +160,14 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() {
 }
 
 @Composable
-fun AddAudioScreen( audioSearchBTN: () -> String,
+fun AddAudioScreen( audioSearchBTN: () -> Unit,
                     saveBTN: (String) -> Unit,
                     goBackBTN: () -> Unit,
                     context: Context,
                     modifier: Modifier = Modifier)
 {
-    var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioName) }
-    var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUri.toString()) }
+    var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
+    var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -190,7 +180,10 @@ fun AddAudioScreen( audioSearchBTN: () -> String,
             modifier = modifier
                 .fillMaxWidth(),
             value = audioName,
-            onValueChange = { audioName = it },
+            onValueChange = {
+                audioName = it
+                addNewAudioScreenObjectStatus.selectedAudioUserName = it
+                },
             label = { Text("Enter audio name: ") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
@@ -202,15 +195,15 @@ fun AddAudioScreen( audioSearchBTN: () -> String,
             // AUDIO FILE NAME FROM URI
             OutlinedTextField(
                 modifier = modifier,
-//                value =  audioFile.name,
-//                onValueChange = { audioFile.name = it },
                 value =  audioFile,
-                onValueChange = { audioFile = it
-//                    addNewAudioScreenObjectStatus.selectedAudioName = it
-                                },
+                onValueChange = {
+                    audioFile = it
+                    addNewAudioScreenObjectStatus.selectedAudioFileName = it
+                    },
                 label = { Text("Selected file: ") },
                 readOnly = true
             )
+            //SEARCH AUDIO BUTTON
             Box(modifier = modifier
                 .clip(RoundedCornerShape(30))
                 .padding(start = 26.dp, top = 5.dp),
@@ -220,7 +213,8 @@ fun AddAudioScreen( audioSearchBTN: () -> String,
                     contentDescription = "Add Audio",
                     modifier = modifier
                         .clickable {
-                            audioFile = audioSearchBTN().toString()
+                            audioSearchBTN()
+                            audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
                         }
                         .size(40.dp)
                         .border(width = 3.dp, color = Green200, shape = CircleShape)

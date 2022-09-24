@@ -9,7 +9,7 @@ import com.example.soundsapp.db.entity.Audio
 //import com.example.soundsapp.db.DAO.AudioDAO
 
 
-@Database(entities = [Audio::class], version = 9)
+@Database(entities = [Audio::class], version = 10)
 abstract class AudiosDataBase : RoomDatabase() {
     abstract fun audioDAO(): AudioDAO
 }
