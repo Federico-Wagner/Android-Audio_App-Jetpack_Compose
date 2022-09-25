@@ -1,4 +1,4 @@
-package com.example.soundsapp.helpers
+package com.example.soundsapp.outScope
 
 //import android.app.Activity
 //import android.content.Context

@@ -17,7 +17,8 @@ import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 class MainActivity : ComponentActivity() {
     private val TAG = "MainActivity"
-//    lateinit var dataBaseRows : List<Audio>
+    lateinit var dataBaseRows : List<Audio>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate Called")
@@ -26,7 +27,8 @@ class MainActivity : ComponentActivity() {
         DataBase.createDB(applicationContext)
         DataBase.showRecords()
 
-        val dataBaseRows : List<Audio> = DataBase.getAllRecords()
+        this.dataBaseRows = DataBase.getAllRecords()
+
         setContent {
             SoundsAppTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
@@ -34,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    SoundApp(DataSource.sounds, dataBaseRows, addAudioBTN, applicationContext)
+                    SoundApp(DataSource.sounds, this.dataBaseRows, addAudioBTN, applicationContext)
                 }
             }
         }
@@ -51,23 +53,27 @@ class MainActivity : ComponentActivity() {
     }
     override fun onResume() {
         super.onResume()
-//        this.dataBaseRows = DataBase.getAllRecords()
+        this.dataBaseRows = DataBase.getAllRecords()
         Log.d(TAG, "onResume Called")
     }
     override fun onRestart() {
         super.onRestart()
+        this.dataBaseRows = DataBase.getAllRecords()
         Log.d(TAG, "onRestart Called")
     }
     override fun onPause() {
         super.onPause()
+        this.dataBaseRows = DataBase.getAllRecords()
         Log.d(TAG, "onPause Called")
     }
     override fun onStop() {
         super.onStop()
+        this.dataBaseRows = DataBase.getAllRecords()
         Log.d(TAG, "onStop Called")
     }
     override fun onDestroy() {
         super.onDestroy()
+        this.dataBaseRows = DataBase.getAllRecords()
         Log.d(TAG, "onDestroy Called")
     }
 }

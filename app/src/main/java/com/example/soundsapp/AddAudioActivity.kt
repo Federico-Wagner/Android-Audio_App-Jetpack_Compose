@@ -31,8 +31,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.AddAudioScreen
+import com.example.soundsapp.ui.PlayerControls
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 import java.util.logging.Level
@@ -67,6 +70,11 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
             val audioUri: Uri? = result.data?.data?.normalizeScheme()
             // Save Uri of selected AUDIO FILE
             addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
+
+            // TEST START
+//            MediaPlayerFW.setAndPlay(applicationContext, Audio(566,"test","test.mpX", audioUri.toString() ))
+            // TEST END
+
             val cursor: Cursor? =
                 audioUri?.let { contentResolver.query(it,null, null, null, null, null) }
             try {
@@ -159,113 +167,119 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
     }
 }
 
-@Composable
-fun AddAudioScreen( audioSearchBTN: () -> Unit,
-                    saveBTN: (String) -> Unit,
-                    goBackBTN: () -> Unit,
-                    context: Context,
-                    modifier: Modifier = Modifier)
-{
-    var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
-    var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        // AUDIO NAME FROM USER
-        OutlinedTextField(
-            modifier = modifier
-                .fillMaxWidth(),
-            value = audioName,
-            onValueChange = {
-                audioName = it
-                addNewAudioScreenObjectStatus.selectedAudioUserName = it
-                },
-            label = { Text("Enter audio name: ") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ){
-            // AUDIO FILE NAME FROM URI
-            OutlinedTextField(
-                modifier = modifier,
-                value =  audioFile,
-                onValueChange = {
-                    audioFile = it
-                    addNewAudioScreenObjectStatus.selectedAudioFileName = it
-                    },
-                label = { Text("Selected file: ") },
-                readOnly = true
-            )
-            //SEARCH AUDIO BUTTON
-            Box(modifier = modifier
-                .clip(RoundedCornerShape(30))
-                .padding(start = 26.dp, top = 5.dp),
-                contentAlignment = Alignment.Center
-            ){
-                Icon(Icons.Rounded.Add,
-                    contentDescription = "Add Audio",
-                    modifier = modifier
-                        .clickable {
-                            audioSearchBTN()
-                            audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
-                        }
-                        .size(40.dp)
-                        .border(width = 3.dp, color = Green200, shape = CircleShape)
-                )
-            }
-        }
 
-        PlayerControls(context, modifier = modifier)
 
-        Row(modifier = modifier
-            .fillMaxWidth()
-            ,horizontalArrangement = Arrangement.SpaceEvenly
-            ){
-            Button(
-                modifier = modifier.padding(top = 15.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-                onClick = { goBackBTN() }) {
-                Text(text = "Discard")
-            }
-            Button(
-                modifier = modifier.padding(top = 15.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
-                onClick = { saveBTN(audioName) }) {
-                Text(text = "Save")
-            }
-        }
-    }
-}
+//
+//@Composable
+//fun AddAudioScreen( audioSearchBTN: () -> Unit,
+//                    saveBTN: (String) -> Unit,
+//                    goBackBTN: () -> Unit,
+//                    context: Context,
+//                    modifier: Modifier = Modifier)
+//{
+//    var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
+//    var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
+//    Column(
+//        modifier = modifier
+//            .fillMaxWidth()
+//            .padding(10.dp),
+//        verticalArrangement = Arrangement.SpaceEvenly,
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//    ) {
+//        // AUDIO NAME FROM USER
+//        OutlinedTextField(
+//            modifier = modifier
+//                .fillMaxWidth(),
+//            value = audioName,
+//            onValueChange = {
+//                audioName = it
+//                addNewAudioScreenObjectStatus.selectedAudioUserName = it
+//                },
+//            label = { Text("Enter audio name: ") },
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+//        )
+//        Row(
+//            modifier = modifier
+//                .fillMaxWidth(),
+//            verticalAlignment = Alignment.CenterVertically,
+//        ){
+//            // AUDIO FILE NAME FROM URI
+//            OutlinedTextField(
+//                modifier = modifier,
+//                value =  audioFile,
+//                onValueChange = {
+//                    audioFile = it
+//                    addNewAudioScreenObjectStatus.selectedAudioFileName = it
+//                    },
+//                label = { Text("Selected file: ") },
+//                readOnly = true
+//            )
+//            //SEARCH AUDIO BUTTON
+//            Box(modifier = modifier
+//                .clip(RoundedCornerShape(30))
+//                .padding(start = 26.dp, top = 5.dp),
+//                contentAlignment = Alignment.Center
+//            ){
+//                Icon(Icons.Rounded.Add,
+//                    contentDescription = "Add Audio",
+//                    modifier = modifier
+//                        .clickable {
+//                            audioSearchBTN()
+//                            audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
+//                        }
+//                        .size(40.dp)
+//                        .border(width = 3.dp, color = Green200, shape = CircleShape)
+//                )
+//            }
+//        }
+//
+//        PlayerControls(context, modifier = modifier)
+//
+//        Row(modifier = modifier
+//            .fillMaxWidth()
+//            ,horizontalArrangement = Arrangement.SpaceEvenly
+//            ){
+//            Button(
+//                modifier = modifier.padding(top = 15.dp),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+//                onClick = { goBackBTN() }) {
+//                Text(text = "Discard")
+//            }
+//            Button(
+//                modifier = modifier.padding(top = 15.dp),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
+//                onClick = { saveBTN(audioName) }) {
+//                Text(text = "Save")
+//            }
+//        }
+//    }
+//}
 
-@Composable
-fun PlayerControls(context: Context,
-                   modifier: Modifier = Modifier
-    ){
-    var state : MediaPlayerFW.PlayerState = MediaPlayerFW.state
-
-    Box(modifier = modifier
-        .size(55.dp)
-        .clip(RoundedCornerShape(50)),
-    ){
-        Icon(Icons.Rounded.PlayArrow, contentDescription = "Play",
-            modifier = modifier
-                .clickable {
-                    MediaPlayerFW.tap(context, addNewAudioScreenObjectStatus.selectedAudioUri)
-                    state = MediaPlayerFW.state
-                }
-                .size(55.dp)
-                .clip(RoundedCornerShape(50)),
-            tint = Green200
-        )
-    }
-}
+//@Composable
+//fun PlayerControls(context: Context,
+//                   modifier: Modifier = Modifier
+//    ){
+//    var state : MediaPlayerFW.PlayerState = MediaPlayerFW.state
+//
+//    Box(modifier = modifier
+//        .size(55.dp)
+//        .clip(RoundedCornerShape(50)),
+//    ){
+//        Icon(Icons.Rounded.PlayArrow, contentDescription = "Play",
+//            modifier = modifier
+//                .clickable {
+////                    MediaPlayerFW.tap(context, addNewAudioScreenObjectStatus.selectedAudioUri)
+//                    MediaPlayerFW.tap(context, Audio(0,addNewAudioScreenObjectStatus.selectedAudioUserName
+//                    ,addNewAudioScreenObjectStatus.selectedAudioFileName,
+//                    addNewAudioScreenObjectStatus.selectedAudioUri.toString()))
+//                    state = MediaPlayerFW.state
+//                }
+//                .size(55.dp)
+//                .clip(RoundedCornerShape(50)),
+//            tint = Green200
+//        )
+//    }
+//}
 
 //Icons.Rounded.PlayArrow
 //Icons.Rounded.Pause

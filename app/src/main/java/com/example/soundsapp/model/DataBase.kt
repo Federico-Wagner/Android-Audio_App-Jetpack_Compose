@@ -50,4 +50,7 @@ object DataBase {
     fun getAllRecords(): List<Audio> {
         return this.audioDao.getAll()
     }
+    fun deleteAllRecords() {
+        this.audioDao.deleteAll(this.getAllRecords())
+    }
 }

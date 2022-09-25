@@ -32,15 +32,16 @@ import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 //import com.example.soundsapp.helpers.AudioPlayer
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.theme.Purple700
 
 
 @Composable
 fun SoundApp(sounds: List<Sound>,
-             soundsDB: List<Audio>,
+             soundsDBx: List<Audio>,
              addAudioBTN : () -> Unit,
              context: Context,
              modifier : Modifier = Modifier){
-//    var dataBaseRows by remember { mutableStateOf(DataBase.getAllRecords()) }
+    val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
     Scaffold(
         modifier = modifier.fillMaxWidth(),
         topBar = {
@@ -54,6 +55,21 @@ fun SoundApp(sounds: List<Sound>,
                     modifier = modifier.padding(10.dp),
                     style = MaterialTheme.typography.h4)
             }
+        },
+        bottomBar = {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally)
+
+            {
+            Spacer(modifier = modifier.padding(top = 15.dp))
+            DeleteAll()
+            AddBtn(addAudioBTN)
+            Spacer(modifier = modifier.padding(top = 25.dp))
+            Text(text = "Developed by Federico Wagner",
+                style = MaterialTheme.typography.h6)
+            }
+            Spacer(modifier = modifier.padding(top = 25.dp))
         }
     ) {
         Column(
@@ -61,11 +77,11 @@ fun SoundApp(sounds: List<Sound>,
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             SoundsList(sounds, soundsDB, context)
-            Spacer(modifier = modifier.padding(top = 15.dp))
-            AddBtn(addAudioBTN)
-            Spacer(modifier = modifier.padding(top = 25.dp))
-            Text(text = "Developed by Federico Wagner",
-                style = MaterialTheme.typography.h6)
+//            Spacer(modifier = modifier.padding(top = 15.dp))
+//            AddBtn(addAudioBTN)
+//            Spacer(modifier = modifier.padding(top = 25.dp))
+//            Text(text = "Developed by Federico Wagner",
+//                style = MaterialTheme.typography.h6)
         }
     }
 }
@@ -105,7 +121,10 @@ fun SoundCardDB( audio: Audio,
                     modifier = modifier
                         .clickable {
 //                            AudioPlayer.play(audio, intentContext)
-                            MediaPlayerFW.tap(context, Uri.parse(audio.audioURI))
+
+                            MediaPlayerFW.tap(context, audio)
+
+//                            MediaPlayerFW.tap(context, Uri.parse(audio.audioURI))
                         }
                         .size(55.dp)
                         .clip(RoundedCornerShape(50)),
@@ -190,6 +209,23 @@ fun AddBtn(addAudioBTN : () -> Unit , modifier : Modifier = Modifier){
                 }
                 .size(60.dp)
                 .border(width = 3.dp, color = Green200, shape = CircleShape)
+        )
+    }
+}
+
+@Composable
+fun DeleteAll(modifier : Modifier = Modifier){
+    Box(modifier = modifier
+        .clip(RoundedCornerShape(50)),
+    ){
+        Icon(Icons.Rounded.Add,
+            contentDescription = "Add Audio",
+            modifier = modifier
+                .clickable {
+                    DataBase.deleteAllRecords()
+                }
+                .size(60.dp)
+                .border(width = 3.dp, color = Purple700, shape = CircleShape)
         )
     }
 }
