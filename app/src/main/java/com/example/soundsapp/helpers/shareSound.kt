@@ -1,23 +1,12 @@
 package com.example.soundsapp.helpers
 
-import android.content.ActivityNotFoundException
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
-import android.widget.Toast
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
-import com.example.soundsapp.R
-import com.example.soundsapp.model.Sound
 
 
-fun shareSound(intentContext: Context, sound : Sound) {
+fun shareSound(intentContext: Context) {
     val intent = Intent(Intent.ACTION_SEND)
-
-
-
+    
 //    val sendIntent = Intent().apply {
 //        action = Intent.ACTION_SEND
 //        putExtra(

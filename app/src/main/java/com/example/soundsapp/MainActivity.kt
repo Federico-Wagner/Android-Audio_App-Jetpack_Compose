@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.example.soundsapp.data.DataSource
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.SoundApp
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    SoundApp(DataSource.sounds, this.dataBaseRows, addAudioBTN, applicationContext)
+                    SoundApp(this.dataBaseRows, addAudioBTN, applicationContext)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.soundsapp.db.entity
 
+import android.net.Uri
 import androidx.room.*
 
 
