@@ -28,6 +28,7 @@ import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.theme.Purple700
 
@@ -113,6 +114,7 @@ fun SoundCardDB( audio: Audio,
             PlayBTN(playPause, onTap, context = context, modifier= modifier)
 
             Text(text = audio.audioUserName, modifier = modifier.width(70.dp))
+
             Box(modifier = modifier
                 .clip(RoundedCornerShape(50)),
             ){
@@ -121,9 +123,10 @@ fun SoundCardDB( audio: Audio,
                     contentDescription = "share",
                     modifier = modifier
                         .clickable {
-//                            shareSound(intentContext, sound)
+                            shareSound(context, audio)
                         }
-                        .padding(10.dp)
+                        .size(28.dp)
+                        .padding(end = 5.dp)
                 )
             }
         }

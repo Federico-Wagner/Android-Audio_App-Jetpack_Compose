@@ -1,10 +1,10 @@
 package com.example.soundsapp.helpers
 
 import android.content.Context
-import android.content.Intent
+import android.provider.MediaStore
 
 
-fun shareSound(intentContext: Context) {
+fun shareSound(intentContext: Context, audio: MediaStore.Audio) {
 //    val intent = Intent(Intent.ACTION_SEND)
 
 //    val sendIntent = Intent().apply {
