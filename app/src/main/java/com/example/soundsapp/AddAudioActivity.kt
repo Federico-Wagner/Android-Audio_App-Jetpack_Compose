@@ -6,53 +6,74 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.OpenableColumns
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.AddAudioScreen
+import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 import java.util.logging.Level
 import java.util.logging.Logger
 
-
-object addNewAudioScreenObjectStatus{
-    var selectedAudioUri : Uri? = null
-    var selectedAudioUserName : String = "no name yet"
-    var selectedAudioFileName : String = ""
-
-    fun reset(){
-        this.selectedAudioUri =  null
-        this.selectedAudioUserName = ""
-        this.selectedAudioFileName = ""
-    }
-}
+//object addNewAudioScreenObjectStatus{
+//    var selectedAudioUri: Uri? = null
+//    var selectedAudioPath: String? = null
+//    var selectedAudioUserName: String = "no name yet"
+//    var selectedAudioFileName: String = ""
+//
+//    fun reset(){
+//        this.selectedAudioUri =  null
+//        this.selectedAudioPath = null
+//        this.selectedAudioUserName = ""
+//        this.selectedAudioFileName = ""
+//
+//    }
+//}
 
 class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO search difference
     var logger = Logger.getLogger("AddAudioActivity-Loger")
     val audioSearchBTN = fun() {
         val intent = Intent()
         intent.type = "audio/*"
-        intent.action = Intent.ACTION_GET_CONTENT
+//        intent.action = Intent.ACTION_GET_CONTENT     //TEMPORAL PERMISSION
+        intent.action = Intent.ACTION_OPEN_DOCUMENT     //PERMANENT PERMISSION
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         resultLauncher.launch(intent)
     }
+
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val audioUri: Uri? = result.data?.data?.normalizeScheme()
-            // Save Uri of selected AUDIO FILE
+            // Save Uri & PATH of selected AUDIO FILE
             addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
+            addNewAudioScreenObjectStatus.selectedAudioPath = result.data?.data?.path
 
+            //Retrieving audio fileName
+            val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+            )
             val cursor: Cursor? =
-                audioUri?.let { contentResolver.query(it,null, null, null, null, null) }
+                contentResolver.query(audioUri!!, projection, null, null, null, null)
             try {
-                if (cursor != null && cursor.moveToFirst()) {
+                if ((cursor != null) && cursor.moveToFirst()) {
                     val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                     if (!cursor.isNull(nameIndex)) {
                         addNewAudioScreenObjectStatus.selectedAudioFileName = cursor.getString(nameIndex)
@@ -79,26 +100,19 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
     }
 
     fun saveAudioinDB(context: Context) {
-        logger.log(Level.INFO,"saveAudioinDB - ##########################################################")
-        println(addNewAudioScreenObjectStatus.selectedAudioUserName)
-        println(addNewAudioScreenObjectStatus.selectedAudioUri)
-
-        //get audio name from textbox
-        //get audio uri
-        addNewAudioScreenObjectStatus
-
+        //persist in DB
         DataBase.insertInDB(
             addNewAudioScreenObjectStatus.selectedAudioUserName,
             addNewAudioScreenObjectStatus.selectedAudioFileName,
-            addNewAudioScreenObjectStatus.selectedAudioUri
+            addNewAudioScreenObjectStatus.selectedAudioUri,
+            addNewAudioScreenObjectStatus.selectedAudioPath
         )
-
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()
-        MediaPlayerFW.reset()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+//        contentResolver.persistedUriPermissions
         super.onCreate(savedInstanceState)
         addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()

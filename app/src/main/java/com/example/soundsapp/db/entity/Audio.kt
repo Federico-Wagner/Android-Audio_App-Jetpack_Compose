@@ -10,5 +10,6 @@ data class Audio(
     var id: Long,
     @ColumnInfo(name = "audio_user_name") var audioUserName: String,
     @ColumnInfo(name = "audio_file_name") var audioFileName: String,
-    @ColumnInfo(name = "audio_file_uri") var audioURI: String
+    @ColumnInfo(name = "audio_file_uri") var audioURI: String,
+    @ColumnInfo(name = "audio_file_pathi") var audioPath: String
 )

@@ -1,6 +1,7 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,11 +16,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.example.soundsapp.addNewAudioScreenObjectStatus
+import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.Green200
 
+object addNewAudioScreenObjectStatus{
+    var selectedAudioUri: Uri? = null
+    var selectedAudioPath: String? = null
+    var selectedAudioUserName: String = "no name yet"
+    var selectedAudioFileName: String = ""
+    var playPause : ImageVector = MediaPlayerFW.getIcon()
+
+    fun reset(){
+        this.selectedAudioUri =  null
+        this.selectedAudioPath = null
+        this.selectedAudioUserName = ""
+        this.selectedAudioFileName = ""
+
+    }
+}
 
 @Composable
 fun AddAudioScreen(audioSearchBTN: () -> Unit,
@@ -31,6 +48,13 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
 {
     var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
+
+    var playPause by remember { mutableStateOf(addNewAudioScreenObjectStatus.playPause) }
+
+    val update = fun(){
+        playPause = MediaPlayerFW.getIcon()
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -60,8 +84,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 modifier = modifier,
                 value =  audioFile,
                 onValueChange = {
-                    audioFile = it
-                    addNewAudioScreenObjectStatus.selectedAudioFileName = it
+                                    //no action due to readonly ppt - never reached
                 },
                 label = { Text("Selected file: ") },
                 readOnly = true
@@ -76,17 +99,19 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                     contentDescription = "Add Audio",
                     modifier = modifier
                         .clickable {
+                            if(MediaPlayerFW.player.isPlaying){ MediaPlayerFW.stop() }
                             audioSearchBTN()
                             audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
+                            update()
                         }
                         .size(40.dp)
                         .border(width = 3.dp, color = Green200, shape = CircleShape)
                 )
             }
         }
-
-        PlayerControls(context, modifier = modifier)
-
+        if(addNewAudioScreenObjectStatus.selectedAudioUri != null) {
+            PlayerControls(playPause, update, context, modifier = modifier)
+        }
         Row(modifier = modifier
             .fillMaxWidth()
             ,horizontalArrangement = Arrangement.SpaceEvenly

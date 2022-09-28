@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.content.ContentResolver
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -35,6 +36,8 @@ import com.example.soundsapp.ui.theme.Purple700
 fun SoundApp(soundsDBx: List<Audio>,
              addAudioBTN : () -> Unit,
              context: Context,
+             contentResolver: ContentResolver,
+             TESTURI: (Audio) -> Unit,
              modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
     Scaffold(
@@ -71,25 +74,24 @@ fun SoundApp(soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB, context)
+            SoundsList(soundsDB, context, TESTURI)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SoundsList(soundsDB: List<Audio>, context: Context) {
+fun SoundsList(soundsDB: List<Audio>, context: Context, TESTURI: (Audio) -> Unit,) {
     LazyVerticalGrid(cells = GridCells.Fixed(2)){
-        items(soundsDB){audio -> SoundCardDB(audio, context)}
+        items(soundsDB){audio -> SoundCardDB(audio, context, TESTURI)}
     }
 }
-
 
 @Composable
 fun SoundCardDB( audio: Audio,
                  context: Context,
+                 TESTURI: (Audio) -> Unit,
               modifier : Modifier = Modifier ) {
-    val intentContext = LocalContext.current
     Card(modifier = Modifier
         .padding(8.dp)
         .height(60.dp)
@@ -105,11 +107,7 @@ fun SoundCardDB( audio: Audio,
                 Icon(Icons.Rounded.PlayArrow, contentDescription = "Play",
                     modifier = modifier
                         .clickable {
-//                            AudioPlayer.play(audio, intentContext)
-
                             MediaPlayerFW.tap(context, audio)
-
-//                            MediaPlayerFW.tap(context, Uri.parse(audio.audioURI))
                         }
                         .size(55.dp)
                         .clip(RoundedCornerShape(50)),

@@ -8,6 +8,7 @@ import com.example.soundsapp.db.DAO.AudioDAO
 import com.example.soundsapp.db.entity.Audio
 
 
+
 object DataBase {
     lateinit var db: AudiosDataBase
     private lateinit var audioDao : AudioDAO
@@ -25,11 +26,13 @@ object DataBase {
 
     fun insertInDB(audioUserName: String,
                    audioFileName: String,
-                   audioURI: Uri?) {
+                   audioURI: Uri?,
+                    audioPath: String?) {
         val newAudio = Audio(0,
             audioUserName,
             audioFileName,
-            audioURI.toString())
+            audioURI.toString(),
+            audioPath.toString())
         this.audioDao.insert(newAudio)
     }
 
@@ -42,7 +45,8 @@ object DataBase {
                         it.id + " - " +
                         it.audioUserName + " - " +
                         it.audioFileName + "\n" +
-                        it.audioURI +
+                        it.audioURI + "\n" +
+                        it.audioPath +
                         "\n----------------------"
             )
         }

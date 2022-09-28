@@ -1,61 +1,56 @@
 package com.example.soundsapp.helpers
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Pause
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.soundsapp.AddAudioActivity
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import java.util.logging.Level
 import java.util.logging.Logger
 
+
 object MediaPlayerFW {
-    var logger = Logger.getLogger("MediaPlayerFW-Loger")
+    val logger = Logger.getLogger("MediaPlayerFW-OBJ")
     var player: MediaPlayer = MediaPlayer()
     var state: PlayerState = PlayerState.STOP
-    var currentAudioId: Long = 0
-
-
+    var currentAudioUri: String? = null
 
     enum class PlayerState {
         STOP, PLAY, PAUSE
     }
 
     fun tap(context: Context, audio : Audio){
-        logger.log(Level.FINE,"MediaPlayerFW - STATE:" + this.state)
-        logger.log(Level.FINE,"MediaPlayerFW AUDIO:-------------------------------------------------------------------------" )
+        println("MediaPlayerFW AUDIO - tap:  ##########################################################################################")
+        println(this.state)
         println(audio)
-        logger.log(Level.FINE,"MediaPlayerFW AUDIO:-------------------------------------------------------------------------" )
-        if(audio.id == this.currentAudioId){
+        println("MediaPlayerFW AUDIO - tap:  ##########################################################################################")
+
+        if(audio.audioURI == this.currentAudioUri ){
             //TAPING ON THE SAME AUDIO BTN FOR PLAY PAUSE
             when (this.state) {
-                PlayerState.STOP -> { this.setAndPlay(context, audio) }
+                PlayerState.STOP -> { this.play() }
                 PlayerState.PLAY -> { this.pause() }
                 PlayerState.PAUSE -> { this.play() }
-                else -> { logger.log(Level.WARNING,"MediaPlayerFW - tap reached else output")}
             }
         }else{
             //TAPPED ON ANOTHER AUDIO
-            this.currentAudioId = audio.id
+            this.currentAudioUri = audio.audioURI
             this.setAndPlay(context, audio)
         }
-
-
-//        when (this.state) {
-//            PlayerState.STOP -> { this.setAndPlay(context, audio) }
-//            PlayerState.PLAY -> { this.pause() }
-//            PlayerState.PAUSE -> { this.play() }
-//            else -> { logger.log(Level.WARNING,"MediaPlayerFW - tap reached else output")}
-//        }
     }
 
     fun setAndPlay(context: Context, audio: Audio){
         val audioUri = Uri.parse(audio.audioURI)
-
-        logger.log(Level.INFO,"MediaPlayerFW - Playing: " + audioUri.toString())
         if(audioUri != null) {
             try{
-                if(this.player.isPlaying) { this.player.stop() }
-                this.state = PlayerState.PLAY
+                if(this.player.isPlaying) { MediaPlayerFW.stop() }
                 this.player = MediaPlayer().apply {
                     setAudioAttributes(
                         AudioAttributes.Builder()
@@ -63,17 +58,16 @@ object MediaPlayerFW {
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build()
                     )
-                    setDataSource(context, audioUri)
                     setOnCompletionListener { MediaPlayerFW.stop() }
-                    prepareAsync()
-//                    prepare()
-                    setOnPreparedListener { start() }
-//                    start()
+                    setDataSource(context, audioUri)
+                    prepare()
+                    start()
                 }
+                this.state = PlayerState.PLAY
             }catch (e: Exception){
                 logger.log(Level.SEVERE,e.toString())
+                println(e)
             }
-
         }
     }
     fun play(){
@@ -83,14 +77,24 @@ object MediaPlayerFW {
     fun pause(){
         this.player.pause()
         this.state = PlayerState.PAUSE
-
     }
-    fun stop(){
-        this.player.stop()
-        this.state = PlayerState.STOP
+     fun stop(){
+         if(this.player.isPlaying) {
+             this.player.stop()
+             this.player.prepare()
+             this.state = PlayerState.STOP
+         }
     }
     fun reset(){
         this.player.reset()
         this.state = PlayerState.STOP
+    }
+    //UI
+    fun getIcon(): ImageVector {
+        return if(MediaPlayerFW.player.isPlaying){
+            Icons.Rounded.Pause
+        }else{
+            Icons.Rounded.PlayArrow
+        }
     }
 }
