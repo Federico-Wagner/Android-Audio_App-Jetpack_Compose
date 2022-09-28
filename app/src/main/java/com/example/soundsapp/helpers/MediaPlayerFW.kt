@@ -1,7 +1,6 @@
 package com.example.soundsapp.helpers
 
 import android.content.Context
-import android.content.Intent
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
@@ -9,9 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.soundsapp.AddAudioActivity
 import com.example.soundsapp.db.entity.Audio
-import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -26,12 +23,7 @@ object MediaPlayerFW {
         STOP, PLAY, PAUSE
     }
 
-    fun tap(context: Context, audio : Audio){
-        println("MediaPlayerFW AUDIO - tap:  ##########################################################################################")
-        println(this.state)
-        println(audio)
-        println("MediaPlayerFW AUDIO - tap:  ##########################################################################################")
-
+    fun tap(context: Context, audio : Audio, onFinish: () -> Unit){
         if(audio.audioURI == this.currentAudioUri ){
             //TAPING ON THE SAME AUDIO BTN FOR PLAY PAUSE
             when (this.state) {
@@ -42,11 +34,11 @@ object MediaPlayerFW {
         }else{
             //TAPPED ON ANOTHER AUDIO
             this.currentAudioUri = audio.audioURI
-            this.setAndPlay(context, audio)
+            this.setAndPlay(context, audio, onFinish)
         }
     }
 
-    fun setAndPlay(context: Context, audio: Audio){
+    fun setAndPlay(context: Context, audio: Audio, onFinish: () -> Unit){
         val audioUri = Uri.parse(audio.audioURI)
         if(audioUri != null) {
             try{
@@ -58,7 +50,10 @@ object MediaPlayerFW {
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build()
                     )
-                    setOnCompletionListener { MediaPlayerFW.stop() }
+                    setOnCompletionListener {
+                        MediaPlayerFW.stopPrivate()
+                        onFinish()
+                    }
                     setDataSource(context, audioUri)
                     prepare()
                     start()
@@ -70,6 +65,14 @@ object MediaPlayerFW {
             }
         }
     }
+    //PRIVATE METHODS
+    private fun stopPrivate(){
+        this.player.stop()
+        this.player.prepare()
+        this.state = PlayerState.STOP
+    }
+
+    //PUBLIC CONTROLS METHODS
     fun play(){
         this.player.start()
         this.state = PlayerState.PLAY
@@ -89,6 +92,7 @@ object MediaPlayerFW {
         this.player.reset()
         this.state = PlayerState.STOP
     }
+
     //UI
     fun getIcon(): ImageVector {
         return if(MediaPlayerFW.player.isPlaying){

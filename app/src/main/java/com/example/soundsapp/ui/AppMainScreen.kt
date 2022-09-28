@@ -37,7 +37,6 @@ fun SoundApp(soundsDBx: List<Audio>,
              addAudioBTN : () -> Unit,
              context: Context,
              contentResolver: ContentResolver,
-             TESTURI: (Audio) -> Unit,
              modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
     Scaffold(
@@ -74,24 +73,34 @@ fun SoundApp(soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB, context, TESTURI)
+            SoundsList(soundsDB, context)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SoundsList(soundsDB: List<Audio>, context: Context, TESTURI: (Audio) -> Unit,) {
+fun SoundsList(soundsDB: List<Audio>, context: Context) {
     LazyVerticalGrid(cells = GridCells.Fixed(2)){
-        items(soundsDB){audio -> SoundCardDB(audio, context, TESTURI)}
+        items(soundsDB){audio -> SoundCardDB(audio, context)}
     }
 }
 
 @Composable
 fun SoundCardDB( audio: Audio,
                  context: Context,
-                 TESTURI: (Audio) -> Unit,
               modifier : Modifier = Modifier ) {
+    var playPause by remember { mutableStateOf(Icons.Rounded.PlayArrow) }
+
+    val onFinish = fun(){
+        playPause = MediaPlayerFW.getIcon()
+    }
+    val onTap = fun(){
+        MediaPlayerFW.tap(context, audio, onFinish)
+        playPause = MediaPlayerFW.getIcon()
+    }
+
+
     Card(modifier = Modifier
         .padding(8.dp)
         .height(60.dp)
@@ -100,21 +109,10 @@ fun SoundCardDB( audio: Audio,
     ){
         Row(modifier = modifier.fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically){
-            Box(modifier = modifier
-                .size(55.dp)
-                .clip(RoundedCornerShape(50)),
-            ){
-                Icon(Icons.Rounded.PlayArrow, contentDescription = "Play",
-                    modifier = modifier
-                        .clickable {
-                            MediaPlayerFW.tap(context, audio)
-                        }
-                        .size(55.dp)
-                        .clip(RoundedCornerShape(50)),
-                    tint = Green200
-                )
-            }
-            Text(text = audio.audioUserName, modifier = modifier.width(80.dp))
+
+            PlayBTN(playPause, onTap, context = context, modifier= modifier)
+
+            Text(text = audio.audioUserName, modifier = modifier.width(70.dp))
             Box(modifier = modifier
                 .clip(RoundedCornerShape(50)),
             ){

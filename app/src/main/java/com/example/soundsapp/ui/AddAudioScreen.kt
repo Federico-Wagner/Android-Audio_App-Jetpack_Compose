@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.Green200
 
@@ -50,8 +51,21 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
 
     var playPause by remember { mutableStateOf(addNewAudioScreenObjectStatus.playPause) }
-
+    val onFinish = fun(){
+        playPause = MediaPlayerFW.getIcon()
+    }
     val update = fun(){
+        playPause = MediaPlayerFW.getIcon()
+    }
+    val onTap = fun(){
+        MediaPlayerFW.tap(
+            context, Audio(
+                0, addNewAudioScreenObjectStatus.selectedAudioUserName,
+                addNewAudioScreenObjectStatus.selectedAudioFileName,
+                addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
+                addNewAudioScreenObjectStatus.selectedAudioPath.toString()
+            ),
+            onFinish)
         playPause = MediaPlayerFW.getIcon()
     }
 
@@ -110,7 +124,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             }
         }
         if(addNewAudioScreenObjectStatus.selectedAudioUri != null) {
-            PlayerControls(playPause, update, context, modifier = modifier)
+            PlayerControls(playPause, onTap, update, context, modifier = modifier)
         }
         Row(modifier = modifier
             .fillMaxWidth()

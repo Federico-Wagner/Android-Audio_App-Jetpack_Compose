@@ -24,26 +24,13 @@ import androidx.compose.ui.unit.dp
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.model.DataBase.saveAudioinDB
 import com.example.soundsapp.ui.AddAudioScreen
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 import java.util.logging.Level
 import java.util.logging.Logger
 
-//object addNewAudioScreenObjectStatus{
-//    var selectedAudioUri: Uri? = null
-//    var selectedAudioPath: String? = null
-//    var selectedAudioUserName: String = "no name yet"
-//    var selectedAudioFileName: String = ""
-//
-//    fun reset(){
-//        this.selectedAudioUri =  null
-//        this.selectedAudioPath = null
-//        this.selectedAudioUserName = ""
-//        this.selectedAudioFileName = ""
-//
-//    }
-//}
 
 class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO search difference
     var logger = Logger.getLogger("AddAudioActivity-Loger")
@@ -55,7 +42,6 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         resultLauncher.launch(intent)
     }
-
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val audioUri: Uri? = result.data?.data?.normalizeScheme()
@@ -91,7 +77,7 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
         MediaPlayerFW.reset()
         goBackBTN()
     }
-    val goBackBTN = fun() {
+    val goBackBTN = fun() {  //TODO FIX NAVIGATION
         //Back to Home
         val startIntent = Intent(applicationContext, MainActivity::class.java)
         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -99,20 +85,7 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
         MediaPlayerFW.reset()
     }
 
-    fun saveAudioinDB(context: Context) {
-        //persist in DB
-        DataBase.insertInDB(
-            addNewAudioScreenObjectStatus.selectedAudioUserName,
-            addNewAudioScreenObjectStatus.selectedAudioFileName,
-            addNewAudioScreenObjectStatus.selectedAudioUri,
-            addNewAudioScreenObjectStatus.selectedAudioPath
-        )
-        //Clean addNewAudioScreenObjectStatus
-        addNewAudioScreenObjectStatus.reset()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-//        contentResolver.persistedUriPermissions
         super.onCreate(savedInstanceState)
         addNewAudioScreenObjectStatus.reset()
         MediaPlayerFW.reset()

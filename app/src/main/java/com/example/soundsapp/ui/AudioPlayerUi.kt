@@ -21,31 +21,21 @@ import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.ui.theme.Red100
 
-//object PlayerControls {
-//    var playPause : ImageVector = MediaPlayerFW.getIcon()
-//}
-
 
 @Composable
-fun PlayerControls(playPause : ImageVector, update: ()-> Unit, context: Context,
+fun PlayerControls(playPause : ImageVector, onTap: ()-> Unit, update: ()-> Unit, context: Context,
                    modifier: Modifier = Modifier
 ){
-//    var playPause by remember { mutableStateOf(PlayerControls.playPause) }
-//
-//    val update = fun(){
-//        playPause = MediaPlayerFW.getIcon()
-//    }
-
     Row {
         StopBTN(update, context = context, modifier= modifier)
         Spacer(modifier = Modifier.padding(end = 10.dp))
-        PlayBTN(update, playPause, context = context, modifier= modifier)
+        PlayBTN( playPause,onTap, context = context, modifier= modifier)
     }
 }
 
 @Composable
-fun PlayBTN(update : () -> Unit,
-            playPause : ImageVector,
+fun PlayBTN(playPause : ImageVector,
+            onTap: () -> Unit,
             context: Context,
             modifier: Modifier = Modifier
 ){
@@ -56,15 +46,7 @@ fun PlayBTN(update : () -> Unit,
         Icon(playPause, contentDescription = "Play",
             modifier = modifier
                 .clickable {
-                    MediaPlayerFW.tap(
-                        context, Audio(
-                            0, addNewAudioScreenObjectStatus.selectedAudioUserName,
-                            addNewAudioScreenObjectStatus.selectedAudioFileName,
-                            addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
-                            addNewAudioScreenObjectStatus.selectedAudioPath.toString()
-                        )
-                    )
-                    update()
+                    onTap()
                 }
                 .size(55.dp)
                 .clip(RoundedCornerShape(50)),
@@ -72,6 +54,7 @@ fun PlayBTN(update : () -> Unit,
         )
     }
 }
+
 @Composable
 fun StopBTN(update : () -> Unit,
             context: Context,

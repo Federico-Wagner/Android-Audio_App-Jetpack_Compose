@@ -6,7 +6,7 @@ import androidx.room.Room
 import com.example.soundsapp.db.AudiosDataBase
 import com.example.soundsapp.db.DAO.AudioDAO
 import com.example.soundsapp.db.entity.Audio
-
+import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 
 
 object DataBase {
@@ -34,6 +34,18 @@ object DataBase {
             audioURI.toString(),
             audioPath.toString())
         this.audioDao.insert(newAudio)
+    }
+
+    fun saveAudioinDB(context: Context) {
+        //persist in DB
+        DataBase.insertInDB(
+            addNewAudioScreenObjectStatus.selectedAudioUserName,
+            addNewAudioScreenObjectStatus.selectedAudioFileName,
+            addNewAudioScreenObjectStatus.selectedAudioUri,
+            addNewAudioScreenObjectStatus.selectedAudioPath
+        )
+        //Clean addNewAudioScreenObjectStatus
+        addNewAudioScreenObjectStatus.reset()
     }
 
     fun showRecords() {
