@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +53,14 @@ fun SoundApp(soundsDBx: List<Audio>,
                 Text(text = "Sounds App",
                     modifier = modifier.padding(10.dp),
                     style = MaterialTheme.typography.h4)
+                Icon(
+                    Icons.Sharp.Search,
+                    contentDescription = "search",
+                    modifier = modifier
+                        .clickable { }
+                        .size(60.dp)
+                        .padding(start = 30.dp, top = 15.dp)
+                )
             }
         },
         bottomBar = {
@@ -61,13 +70,13 @@ fun SoundApp(soundsDBx: List<Audio>,
 
             {
             Spacer(modifier = modifier.padding(top = 15.dp))
-            DeleteAll()
+//            DeleteAll()
             AddBtn(addAudioBTN)
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
                 style = MaterialTheme.typography.h6)
             }
-            Spacer(modifier = modifier.padding(top = 25.dp))
+            Spacer(modifier = modifier.padding(bottom = 25.dp))
         }
     ) {
         Column(
@@ -101,7 +110,6 @@ fun SoundCardDB( audio: Audio,
         playPause = MediaPlayerFW.getIcon()
     }
 
-
     Card(modifier = Modifier
         .padding(8.dp)
         .height(60.dp)
@@ -111,7 +119,7 @@ fun SoundCardDB( audio: Audio,
         Row(modifier = modifier.fillMaxHeight(),
             verticalAlignment = Alignment.CenterVertically){
 
-            PlayBTN(playPause, onTap, context = context, modifier= modifier)
+            PlayBTN(playPause, null, onTap, context = context, modifier= modifier)
 
             Text(text = audio.audioUserName, modifier = modifier.width(70.dp))
 

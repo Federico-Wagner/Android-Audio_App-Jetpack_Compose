@@ -18,6 +18,7 @@ object MediaPlayerFW {
     var player: MediaPlayer = MediaPlayer()
     var state: PlayerState = PlayerState.STOP
     var currentAudioUri: String? = null
+    var onFinishX: (() -> Unit?)? = null
 
     enum class PlayerState {
         STOP, PLAY, PAUSE
@@ -33,6 +34,10 @@ object MediaPlayerFW {
             }
         }else{
             //TAPPED ON ANOTHER AUDIO
+            if(this.player.isPlaying){ //CURRENT AUDIO HASN'T FINISHED -> RESTART UI CARD
+                stop()
+                this.onFinishX?.let { it() }
+            }
             this.currentAudioUri = audio.audioURI
             this.setAndPlay(context, audio, onFinish)
         }
@@ -40,6 +45,7 @@ object MediaPlayerFW {
 
     fun setAndPlay(context: Context, audio: Audio, onFinish: () -> Unit){
         val audioUri = Uri.parse(audio.audioURI)
+        this.onFinishX = onFinish
         if(audioUri != null) {
             try{
                 if(this.player.isPlaying) { MediaPlayerFW.stop() }
@@ -51,7 +57,7 @@ object MediaPlayerFW {
                             .build()
                     )
                     setOnCompletionListener {
-                        MediaPlayerFW.stopPrivate()
+                        MediaPlayerFW.stop()
                         onFinish()
                     }
                     setDataSource(context, audioUri)
@@ -65,12 +71,6 @@ object MediaPlayerFW {
             }
         }
     }
-    //PRIVATE METHODS
-    private fun stopPrivate(){
-        this.player.stop()
-        this.player.prepare()
-        this.state = PlayerState.STOP
-    }
 
     //PUBLIC CONTROLS METHODS
     fun play(){
@@ -82,11 +82,9 @@ object MediaPlayerFW {
         this.state = PlayerState.PAUSE
     }
      fun stop(){
-         if(this.player.isPlaying) {
-             this.player.stop()
-             this.player.prepare()
-             this.state = PlayerState.STOP
-         }
+         this.player.stop()
+         this.player.prepare()
+         this.state = PlayerState.STOP
     }
     fun reset(){
         this.player.reset()

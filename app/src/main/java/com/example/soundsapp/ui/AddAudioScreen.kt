@@ -22,19 +22,22 @@ import androidx.compose.ui.unit.dp
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.Green200
+import com.example.soundsapp.ui.theme.Red300
 
 object addNewAudioScreenObjectStatus{
     var selectedAudioUri: Uri? = null
     var selectedAudioPath: String? = null
     var selectedAudioUserName: String = "no name yet"
     var selectedAudioFileName: String = ""
-    var playPause : ImageVector = MediaPlayerFW.getIcon()
+//    var playPause : ImageVector = MediaPlayerFW.getIcon()
+    var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
 
     fun reset(){
         this.selectedAudioUri =  null
         this.selectedAudioPath = null
         this.selectedAudioUserName = ""
         this.selectedAudioFileName = ""
+        this.playerState = MediaPlayerFW.PlayerState.STOP
 
     }
 }
@@ -49,13 +52,13 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
 {
     var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
+    var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
 
-    var playPause by remember { mutableStateOf(addNewAudioScreenObjectStatus.playPause) }
     val onFinish = fun(){
-        playPause = MediaPlayerFW.getIcon()
+        playerState = MediaPlayerFW.state
     }
     val update = fun(){
-        playPause = MediaPlayerFW.getIcon()
+        playerState = MediaPlayerFW.state
     }
     val onTap = fun(){
         MediaPlayerFW.tap(
@@ -66,7 +69,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 addNewAudioScreenObjectStatus.selectedAudioPath.toString()
             ),
             onFinish)
-        playPause = MediaPlayerFW.getIcon()
+        update()
     }
 
     Column(
@@ -117,15 +120,16 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                             audioSearchBTN()
                             audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
                             update()
+                            playerState = MediaPlayerFW.PlayerState.STOP
                         }
                         .size(40.dp)
                         .border(width = 3.dp, color = Green200, shape = CircleShape)
                 )
             }
         }
-        if(addNewAudioScreenObjectStatus.selectedAudioUri != null) {
-            PlayerControls(playPause, onTap, update, context, modifier = modifier)
-        }
+
+        PlayerControls( onTap, update, playerState, context, modifier = modifier)
+
         Row(modifier = modifier
             .fillMaxWidth()
             ,horizontalArrangement = Arrangement.SpaceEvenly
