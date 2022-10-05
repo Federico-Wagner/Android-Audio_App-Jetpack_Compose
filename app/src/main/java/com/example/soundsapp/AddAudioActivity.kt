@@ -1,7 +1,6 @@
 package com.example.soundsapp
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -14,21 +13,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Surface
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
-import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.model.DataBase.saveAudioinDB
 import com.example.soundsapp.ui.AddAudioScreen
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
-import java.util.logging.Level
 import java.util.logging.Logger
 
 
@@ -94,7 +86,7 @@ class AddAudioActivity : ComponentActivity(){ //AppCompatActivity() { //TODO sea
                 Surface(
                     modifier = Modifier
                         .height(300.dp)
-                        .fillMaxWidth(1f),
+                        .fillMaxWidth(),
                     color = Color.Transparent
                 ) {
                     AddAudioScreen(audioSearchBTN,

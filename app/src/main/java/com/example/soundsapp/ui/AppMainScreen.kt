@@ -22,7 +22,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.soundsapp.ui.theme.Green200
@@ -70,7 +69,7 @@ fun SoundApp(soundsDBx: List<Audio>,
 
             {
             Spacer(modifier = modifier.padding(top = 15.dp))
-//            DeleteAll()
+            DeleteAll()
             AddBtn(addAudioBTN)
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
@@ -84,6 +83,7 @@ fun SoundApp(soundsDBx: List<Audio>,
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             SoundsList(soundsDB, context)
+            PopupWindowDialog()
         }
     }
 }
