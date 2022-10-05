@@ -37,7 +37,6 @@ import com.example.soundsapp.ui.theme.Purple700
 fun SoundApp(soundsDBx: List<Audio>,
              addAudioBTN : () -> Unit,
              context: Context,
-             contentResolver: ContentResolver,
              modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
     Scaffold(
@@ -83,7 +82,6 @@ fun SoundApp(soundsDBx: List<Audio>,
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             SoundsList(soundsDB, context)
-            PopupWindowDialog()
         }
     }
 }

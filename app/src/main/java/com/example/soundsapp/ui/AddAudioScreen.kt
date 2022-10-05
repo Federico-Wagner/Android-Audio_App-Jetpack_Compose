@@ -73,7 +73,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .height(400.dp)
             .padding(10.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,7 +97,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
         ){
             // AUDIO FILE NAME FROM URI
             OutlinedTextField(
-                modifier = modifier,
+                modifier = modifier.width(240.dp).padding(end = 20.dp),
                 value =  audioFile,
                 onValueChange = {
                                     //no action due to readonly ppt - never reached
@@ -108,7 +108,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             //SEARCH AUDIO BUTTON
             Box(modifier = modifier
                 .clip(RoundedCornerShape(30))
-                .padding(start = 26.dp, top = 5.dp),
+                .padding( top = 5.dp),
                 contentAlignment = Alignment.Center
             ){
                 Icon(Icons.Rounded.Add,

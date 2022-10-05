@@ -1,24 +1,92 @@
 package com.example.soundsapp
 
+import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.AddAudioScreen
+import com.example.soundsapp.ui.PopupWindowDialog
 import com.example.soundsapp.ui.SoundApp
+import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 
 class MainActivity : ComponentActivity() {
     private val TAG = "MainActivity"
     lateinit var dataBaseRows : List<Audio>
+
+    val audioSearchBTN = fun() {
+        val intent = Intent()
+        intent.type = "audio/*"
+//        intent.action = Intent.ACTION_GET_CONTENT     //TEMPORAL PERMISSION
+        intent.action = Intent.ACTION_OPEN_DOCUMENT     //PERMANENT PERMISSION
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        resultLauncher.launch(intent)
+    }
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val audioUri: Uri? = result.data?.data?.normalizeScheme()
+            // Save Uri & PATH of selected AUDIO FILE
+            addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
+            addNewAudioScreenObjectStatus.selectedAudioPath = result.data?.data?.path
+
+            //Retrieving audio fileName
+            val projection = arrayOf(
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DISPLAY_NAME,
+                MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media.SIZE,
+            )
+            val cursor: Cursor? =
+                contentResolver.query(audioUri!!, projection, null, null, null, null)
+            try {
+                if ((cursor != null) && cursor.moveToFirst()) {
+                    val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (!cursor.isNull(nameIndex)) {
+                        addNewAudioScreenObjectStatus.selectedAudioFileName = cursor.getString(nameIndex)
+                    }
+                }
+            } finally {
+                cursor?.close()
+            }
+        }
+    }
+
+    val saveBTN = fun(audioName : String) {
+        DataBase.saveAudioinDB(applicationContext)
+        addNewAudioScreenObjectStatus.reset()
+        MediaPlayerFW.reset()
+        goBackBTN()
+    }
+    val goBackBTN = fun() {  //TODO FIX NAVIGATION
+        //Back to Home
+        val startIntent = Intent(applicationContext, MainActivity::class.java)
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        applicationContext.startActivity(startIntent)
+        MediaPlayerFW.reset()
+    }
 
     private val addAudioBTN = fun() {
         val intent = Intent(this, AddAudioActivity::class.java)
@@ -42,8 +110,36 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    SoundApp(this.dataBaseRows, addAudioBTN, applicationContext, contentResolver)
+                    SoundApp(this.dataBaseRows, addAudioBTN, applicationContext)
+                    Popup(
+                        alignment = Alignment.Center,
+                        properties = PopupProperties()
+                    ) {
+                        Box(
+                            Modifier
+                                .height(360.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 15.dp)
+                                .background(Color.Gray, RoundedCornerShape(10.dp))
+                                .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
+                        ) {
+                            AddAudioScreen(audioSearchBTN,
+                                saveBTN,
+                                goBackBTN,
+                                applicationContext)
+
+                        }
+                    }
                 }
+//                Surface(
+//                    modifier = Modifier.fillMaxSize(),
+//                ){
+//                    PopupWindowDialog(audioSearchBTN,
+//                        saveBTN,
+//                        goBackBTN,
+//                        applicationContext
+//                    )
+//                }
             }
         }
     }

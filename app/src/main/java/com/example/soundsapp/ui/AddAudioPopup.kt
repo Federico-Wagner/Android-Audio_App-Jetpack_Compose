@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,23 +21,26 @@ import androidx.compose.ui.window.PopupProperties
 
 // on below line we are creating a pop up window dialog method
 @Composable
-fun PopupWindowDialog() {
+fun PopupWindowDialog(audioSearchBTN: () -> Unit,
+                      saveBTN: (String) -> Unit,
+                      goBackBTN: () -> Unit,
+                      context: Context,
+                      modifier: Modifier = Modifier
+) {
     val openDialog = remember { mutableStateOf(false) }
     val buttonTitle = remember {
         mutableStateOf("Show Pop Up")
     }
-
-
     Column(modifier = Modifier
-//        .fillMaxSize()
-        .height(410.dp)
-        .padding(horizontal = 20.dp , vertical = 50.dp),
+        .fillMaxSize()
+//        .height(410.dp)
+        .padding(horizontal = 20.dp , vertical = 150.dp),
 
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center){
+        verticalArrangement = Arrangement.Top){
         Box {
-            val popupWidth = 300.dp
-            val popupHeight = 100.dp
+            val popupWidth = 350.dp
+            val popupHeight = 300.dp
             if (openDialog.value) {
                 buttonTitle.value = "Hide Pop Up"
                 Popup(
@@ -47,7 +51,7 @@ fun PopupWindowDialog() {
                         Modifier
                             .size(popupWidth, popupHeight)
                             .padding(top = 5.dp)
-                            .background(Color.Green, RoundedCornerShape(10.dp))
+                            .background(Color.Gray, RoundedCornerShape(10.dp))
                             .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
                     ) {
                         Column(
@@ -57,18 +61,17 @@ fun PopupWindowDialog() {
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Text(
-                                text = "Welcome to Geeks for Geeks",
-                                color = Color.White,
-                                modifier = Modifier.padding(vertical = 5.dp),
-                                fontSize = 16.sp
-                            )
+                            AddAudioScreen(audioSearchBTN,
+                                saveBTN,
+                                goBackBTN,
+                                context)
+                        }
                         }
                     }
                 }
             }
         }
-    }
+
 
     Column( modifier = Modifier
 //            .fillMaxSize()
