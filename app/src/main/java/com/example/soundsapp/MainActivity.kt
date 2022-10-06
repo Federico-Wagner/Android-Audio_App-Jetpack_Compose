@@ -1,7 +1,6 @@
 package com.example.soundsapp
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -12,26 +11,15 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
-import com.example.soundsapp.ui.AddAudioScreen
-import com.example.soundsapp.ui.PopupWindowDialog
 import com.example.soundsapp.ui.SoundApp
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
-import com.example.soundsapp.ui.theme.Black050
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 

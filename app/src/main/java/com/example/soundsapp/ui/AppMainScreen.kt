@@ -1,6 +1,5 @@
 package com.example.soundsapp.ui
 
-import android.content.ContentResolver
 import android.content.Context
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
