@@ -1,6 +1,7 @@
 package com.example.soundsapp
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -30,6 +31,7 @@ import com.example.soundsapp.ui.AddAudioScreen
 import com.example.soundsapp.ui.PopupWindowDialog
 import com.example.soundsapp.ui.SoundApp
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
+import com.example.soundsapp.ui.theme.Black050
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 
@@ -110,36 +112,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    SoundApp(this.dataBaseRows, addAudioBTN, applicationContext)
-                    Popup(
-                        alignment = Alignment.Center,
-                        properties = PopupProperties()
-                    ) {
-                        Box(
-                            Modifier
-                                .height(360.dp)
-                                .fillMaxWidth()
-                                .padding(horizontal = 15.dp)
-                                .background(Color.Gray, RoundedCornerShape(10.dp))
-                                .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-                        ) {
-                            AddAudioScreen(audioSearchBTN,
-                                saveBTN,
-                                goBackBTN,
-                                applicationContext)
-
-                        }
-                    }
+                    SoundApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
                 }
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                ){
-//                    PopupWindowDialog(audioSearchBTN,
-//                        saveBTN,
-//                        goBackBTN,
-//                        applicationContext
-//                    )
-//                }
             }
         }
     }

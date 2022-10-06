@@ -36,9 +36,18 @@ import com.example.soundsapp.ui.theme.Purple700
 @Composable
 fun SoundApp(soundsDBx: List<Audio>,
              addAudioBTN : () -> Unit,
+             audioSearchBTN: () -> Unit,
+             saveBTN: (String) -> Unit,
+             goBackBTN: () -> Unit,
              context: Context,
              modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
+    var showHidePopup by remember { mutableStateOf(false) }
+
+    val showHidePopupBTN =  fun (){
+        showHidePopup = !showHidePopup
+    }
+
     Scaffold(
         modifier = modifier.fillMaxWidth(),
         topBar = {
@@ -68,8 +77,9 @@ fun SoundApp(soundsDBx: List<Audio>,
 
             {
             Spacer(modifier = modifier.padding(top = 15.dp))
-            DeleteAll()
-            AddBtn(addAudioBTN)
+                ShowPopupBTN(showHidePopupBTN)
+//            DeleteAll()
+//            AddBtn(addAudioBTN)
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
                 style = MaterialTheme.typography.h6)
@@ -82,6 +92,9 @@ fun SoundApp(soundsDBx: List<Audio>,
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             SoundsList(soundsDB, context)
+            if(showHidePopup){
+                AddAudioPopup(audioSearchBTN, saveBTN, goBackBTN, showHidePopupBTN, context)
+            }
         }
     }
 }
@@ -136,6 +149,23 @@ fun SoundCardDB( audio: Audio,
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ShowPopupBTN(showHidePopupBTN : () -> Unit , modifier : Modifier = Modifier){
+    Box(modifier = modifier
+        .clip(RoundedCornerShape(50)),
+    ){
+        Icon(Icons.Rounded.Add,
+            contentDescription = "Show Popup",
+            modifier = modifier
+                .clickable {
+                    showHidePopupBTN()
+                }
+                .size(60.dp)
+                .border(width = 3.dp, color = Green200, shape = CircleShape)
+        )
     }
 }
 
