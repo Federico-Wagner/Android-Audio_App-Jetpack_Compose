@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.R
@@ -34,6 +36,7 @@ import com.example.soundsapp.ui.theme.Purple700
 
 @Composable
 fun SoundApp(soundsDBx: List<Audio>,
+             showHidePopupBTN: () -> Unit,
              addAudioBTN : () -> Unit,
              audioSearchBTN: () -> Unit,
              saveBTN: (String) -> Unit,
@@ -43,9 +46,10 @@ fun SoundApp(soundsDBx: List<Audio>,
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
     var showHidePopup by remember { mutableStateOf(false) }
 
-    val showHidePopupBTN =  fun (){
-        showHidePopup = !showHidePopup
-    }
+//    val showHidePopupBTN =  fun (){
+//        showHidePopup = !showHidePopup
+//    }
+//    var value = ""
 
     Scaffold(
         modifier = modifier.fillMaxWidth(),
@@ -91,9 +95,9 @@ fun SoundApp(soundsDBx: List<Audio>,
             horizontalAlignment = Alignment.CenterHorizontally)
         {
             SoundsList(soundsDB, context)
-            if(showHidePopup){
-                AddAudioPopup(audioSearchBTN, saveBTN, goBackBTN, showHidePopupBTN, context)
-            }
+//            if(showHidePopup){
+//                AddAudioPopup(audioSearchBTN, saveBTN, goBackBTN, showHidePopupBTN, context)
+//            }
         }
     }
 }

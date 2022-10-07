@@ -39,11 +39,6 @@
         android:theme="@style/Theme.SoundsApp"
         tools:targetApi="31">
         <activity
-            android:name=".AddAudioActivity"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat">
-        </activity>
-        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.SoundsApp">

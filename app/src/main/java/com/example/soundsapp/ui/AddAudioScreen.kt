@@ -2,6 +2,7 @@ package com.example.soundsapp.ui
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.StringRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,15 +12,27 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AttachFile
+import androidx.compose.material.icons.rounded.UploadFile
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.ui.theme.Black050
+import com.example.soundsapp.ui.theme.Black900
 import com.example.soundsapp.ui.theme.Green200
 
 
@@ -28,7 +41,6 @@ object addNewAudioScreenObjectStatus{
     var selectedAudioPath: String? = null
     var selectedAudioUserName: String = "no name yet"
     var selectedAudioFileName: String = ""
-//    var playPause : ImageVector = MediaPlayerFW.getIcon()
     var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
 
     fun reset(){
@@ -90,14 +102,15 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             label = { Text("Enter audio name: ") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
+
+        // AUDIO FILE NAME FROM URI
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ){
-            // AUDIO FILE NAME FROM URI
             OutlinedTextField(
-                modifier = modifier.width(240.dp).padding(end = 20.dp),
+                modifier = modifier.width(280.dp).padding(end = 20.dp),
                 value =  audioFile,
                 onValueChange = {
                                     //no action due to readonly ppt - never reached
@@ -105,14 +118,15 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 label = { Text("Selected file: ") },
                 readOnly = true
             )
+
             //SEARCH AUDIO BUTTON
             Box(modifier = modifier
                 .clip(RoundedCornerShape(30))
                 .padding( top = 5.dp),
                 contentAlignment = Alignment.Center
             ){
-                Icon(Icons.Rounded.Add,
-                    contentDescription = "Add Audio",
+                Icon(Icons.Rounded.AttachFile,
+                    contentDescription = "Search Audio",
                     modifier = modifier
                         .clickable {
                             if(MediaPlayerFW.player.isPlaying){ MediaPlayerFW.stop() }
@@ -121,8 +135,9 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                             update()
                             playerState = MediaPlayerFW.PlayerState.STOP
                         }
-                        .size(40.dp)
-                        .border(width = 3.dp, color = Green200, shape = CircleShape)
+                        .size(45.dp,55.dp)
+                        .padding(6.dp)
+                        .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
                 )
             }
         }
@@ -137,13 +152,13 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 onClick = { goBackBTN() }) {
-                Text(text = "Discard")
+                Text(text = stringResource( R.string.discard), color = Black900, fontSize = 17.sp)
             }
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
                 onClick = { saveBTN(audioName) }) {
-                Text(text = "Save")
+                Text(text = stringResource( R.string.save), color = Black900, fontSize = 17.sp)
             }
         }
     }

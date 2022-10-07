@@ -6,10 +6,14 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -18,17 +22,16 @@ import com.example.soundsapp.ui.theme.Black900
 
 
 @Composable
-fun AddAudioPopup(audioSearchBTN: () -> Unit,
+fun SelectAudio(audioSearchBTN: () -> Unit,
                   saveBTN: (String) -> Unit,
                   goBackBTN: () -> Unit,
                   showHidePopupBTN: () -> Unit,
                   context: Context,
                   modifier: Modifier = Modifier){
-
-    Popup(
-        alignment = Alignment.Center,
-        properties = PopupProperties()
-    ) {
+//    Popup(
+//        alignment = Alignment.Center,
+//        properties = PopupProperties()
+//    ) {
         Box(
             modifier = modifier
                 .fillMaxSize()
@@ -52,10 +55,5 @@ fun AddAudioPopup(audioSearchBTN: () -> Unit,
                     context)
             }
         }
-    }
+//    }
 }
-
-
-
-
-

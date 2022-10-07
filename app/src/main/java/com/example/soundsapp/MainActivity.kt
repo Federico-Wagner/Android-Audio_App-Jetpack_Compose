@@ -12,9 +12,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
@@ -79,8 +84,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private val addAudioBTN = fun() {
-        val intent = Intent(this, AddAudioActivity::class.java)
-        startActivity(intent)
+//        val intent = Intent(this, AddAudioActivity::class.java)
+//        startActivity(intent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,7 +105,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-                    SoundApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
+//                    SoundApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
+                    AudioApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
                 }
             }
         }
