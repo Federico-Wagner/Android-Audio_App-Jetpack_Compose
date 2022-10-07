@@ -36,6 +36,17 @@ object DataBase {
         this.audioDao.insert(newAudio)
     }
 
+    fun updateAudioInDB(audio: Audio, context: Context) {
+        //update in DB
+        this.audioDao.updateByEntity(audio)
+    }
+
+    fun deleteAudio(audio: Audio, context: Context) {
+        //Remove audio from DB
+        this.audioDao.deleteByEntity(audio)
+        //TODO Revoke app file access
+    }
+
     fun saveAudioinDB(context: Context) {
         //persist in DB
         DataBase.insertInDB(
@@ -47,6 +58,8 @@ object DataBase {
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()
     }
+
+
 
     fun showRecords() {
         println("audios:")

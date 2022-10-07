@@ -1,10 +1,7 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -22,34 +19,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.theme.Black900
 import com.example.soundsapp.ui.theme.Purple700
 
 
 @Composable
-fun SoundApp(soundsDBx: List<Audio>,
-             showHidePopupBTN: () -> Unit,
-             addAudioBTN : () -> Unit,
-             audioSearchBTN: () -> Unit,
-             saveBTN: (String) -> Unit,
-             goBackBTN: () -> Unit,
-             context: Context,
-             modifier : Modifier = Modifier){
+fun MainScreen( soundsDBx: List<Audio>,
+                showHidePopupBTN: () -> Unit,
+                navigateToAudioDetail: () -> Unit,
+                context: Context,
+                modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
-    var showHidePopup by remember { mutableStateOf(false) }
-
-//    val showHidePopupBTN =  fun (){
-//        showHidePopup = !showHidePopup
-//    }
-//    var value = ""
 
     Scaffold(
         modifier = modifier.fillMaxWidth(),
@@ -75,9 +67,8 @@ fun SoundApp(soundsDBx: List<Audio>,
         },
         bottomBar = {
             Column(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().background(color = Color.Black),
                 horizontalAlignment = Alignment.CenterHorizontally)
-
             {
             Spacer(modifier = modifier.padding(top = 15.dp))
                 ShowPopupBTN(showHidePopupBTN)
@@ -85,7 +76,7 @@ fun SoundApp(soundsDBx: List<Audio>,
 //            AddBtn(addAudioBTN)
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
-                style = MaterialTheme.typography.h6)
+                fontSize = 15.sp, modifier= Modifier.padding(bottom = 5.dp))
             }
             Spacer(modifier = modifier.padding(bottom = 25.dp))
         }
@@ -94,24 +85,24 @@ fun SoundApp(soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB, context)
-//            if(showHidePopup){
-//                AddAudioPopup(audioSearchBTN, saveBTN, goBackBTN, showHidePopupBTN, context)
-//            }
+            SoundsList(soundsDB,navigateToAudioDetail, context)
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SoundsList(soundsDB: List<Audio>, context: Context) {
+fun SoundsList(soundsDB: List<Audio>,
+               navigateToAudioDetail: () -> Unit,
+               context: Context) {
     LazyVerticalGrid(cells = GridCells.Fixed(2)){
-        items(soundsDB){audio -> SoundCardDB(audio, context)}
+        items(soundsDB){audio -> SoundCardDB(audio,navigateToAudioDetail, context)}
     }
 }
 
 @Composable
 fun SoundCardDB( audio: Audio,
+                 navigateToAudioDetail: () -> Unit,
                  context: Context,
               modifier : Modifier = Modifier ) {
     var playPause by remember { mutableStateOf(Icons.Rounded.PlayArrow) }
@@ -135,7 +126,13 @@ fun SoundCardDB( audio: Audio,
 
             PlayBTN(playPause, null, onTap, context = context, modifier= modifier)
 
-            Text(text = audio.audioUserName, modifier = modifier.width(70.dp))
+            Text(text = audio.audioUserName,
+                modifier = modifier
+                    .width(70.dp)
+                    .clickable {
+                        editAudioObjectStatus.selectedAudio = audio
+                        navigateToAudioDetail()
+                    })
 
             Box(modifier = modifier
                 .clip(RoundedCornerShape(50)),
@@ -166,25 +163,7 @@ fun ShowPopupBTN(showHidePopupBTN : () -> Unit , modifier : Modifier = Modifier)
                 .clickable {
                     showHidePopupBTN()
                 }
-                .size(60.dp)
-                .border(width = 3.dp, color = Green200, shape = CircleShape)
-        )
-    }
-}
-
-@Composable
-fun AddBtn(addAudioBTN : () -> Unit , modifier : Modifier = Modifier){
-    Box(modifier = modifier
-        .clip(RoundedCornerShape(50)),
-    ){
-        Icon(Icons.Rounded.Add,
-            contentDescription = "Add Audio",
-            modifier = modifier
-                .clickable {
-                    DataBase.showRecords() //TODO DEVELOP
-                    addAudioBTN()
-                }
-                .size(60.dp)
+                .size(50.dp)
                 .border(width = 3.dp, color = Green200, shape = CircleShape)
         )
     }

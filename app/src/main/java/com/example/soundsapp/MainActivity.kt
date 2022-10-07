@@ -12,18 +12,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
-import com.example.soundsapp.ui.SoundApp
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 
@@ -69,33 +63,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    val saveBTN = fun(audioName : String) {
-        DataBase.saveAudioinDB(applicationContext)
-        addNewAudioScreenObjectStatus.reset()
-        MediaPlayerFW.reset()
-        goBackBTN()
-    }
-    val goBackBTN = fun() {  //TODO FIX NAVIGATION
-        //Back to Home
-        val startIntent = Intent(applicationContext, MainActivity::class.java)
-        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        applicationContext.startActivity(startIntent)
-        MediaPlayerFW.reset()
-    }
-
-    private val addAudioBTN = fun() {
-//        val intent = Intent(this, AddAudioActivity::class.java)
-//        startActivity(intent)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate Called")
 
         DataBase.createDB(applicationContext)
-        DataBase.showRecords()
-        this.dataBaseRows = DataBase.getAllRecords()
-
         MediaPlayerFW.reset()
 
         setContent {
@@ -105,8 +78,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.secondary
                 ) {
-//                    SoundApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
-                    AudioApp(this.dataBaseRows, addAudioBTN,audioSearchBTN,saveBTN,goBackBTN, applicationContext)
+                    AudioAppScreen(audioSearchBTN, applicationContext)
                 }
             }
         }

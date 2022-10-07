@@ -5,7 +5,7 @@
 
     <string name="discard">Discard</string>
     <string name="save">Save</string>
-
+    <string name="delete">Delete</string>
 
     <string name="mainScreen">Main Screen</string>
     <string name="selectAudio">Select Audio</string>

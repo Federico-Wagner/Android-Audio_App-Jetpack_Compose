@@ -2,7 +2,6 @@ package com.example.soundsapp
 
 
 import android.content.Context
-import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -13,28 +12,18 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-//import com.example.cupcake.data.DataSource.flavors
-//import com.example.cupcake.data.DataSource.quantityOptions
-//import com.example.cupcake.data.OrderUiState
-//import com.example.cupcake.ui.OrderSummaryScreen
-//import com.example.cupcake.ui.OrderViewModel
-//import com.example.cupcake.ui.SelectOptionScreen
-//import com.example.cupcake.ui.StartOrderScreen
-import androidx.navigation.compose.rememberNavController
 import com.example.soundsapp.db.entity.Audio
-import com.example.soundsapp.ui.SelectAudio
-import com.example.soundsapp.ui.SoundApp
+import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.*
 
 
 /**
@@ -51,12 +40,13 @@ enum class AppScreen(@StringRes val title: Int) {
  * Composable that displays the topBar and displays back button if back navigation is possible.
  */
 @Composable
-fun CupcakeAppBar(
+fun NavigationAppBar(
     currentScreen: AppScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if(currentScreen != AppScreen.Start)
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         modifier = modifier,
@@ -74,16 +64,12 @@ fun CupcakeAppBar(
 }
 
 @Composable
-fun AudioApp(soundsDBx: List<Audio>,
-             addAudioBTN : () -> Unit,
-             audioSearchBTN: () -> Unit,
-             saveBTN: (String) -> Unit,
-             goBackBTN: () -> Unit,
-             context: Context,
-             modifier : Modifier = Modifier,
-
+fun AudioAppScreen(
+    audioSearchBTN: () -> Unit,
+    context: Context,
+    modifier : Modifier = Modifier,
 //    viewModel: OrderViewModel = viewModel(),
-             navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController()
 ) {
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -94,7 +80,7 @@ fun AudioApp(soundsDBx: List<Audio>,
 
     Scaffold(
         topBar = {
-            CupcakeAppBar(
+            NavigationAppBar(
                 currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
@@ -109,64 +95,74 @@ fun AudioApp(soundsDBx: List<Audio>,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = AppScreen.Start.name) {
-                SoundApp(soundsDBx,
+                MainScreen(
+                    DataBase.getAllRecords(),
                     showHidePopupBTN = {
                         navController.navigate(AppScreen.Select.name)
                     },
-                    addAudioBTN, audioSearchBTN,saveBTN,goBackBTN, context
-//                    quantityOptions = quantityOptions,
-//                    onNextButtonClicked = {
-//                        viewModel.setQuantity(it)
-//                        navController.navigate(CupcakeScreen.Flavor.name)
-//                    }
+                    navigateToAudioDetail = {
+                        navController.navigate(AppScreen.Details.name)
+                    },
+                    context
                 )
             }
             composable(route = AppScreen.Select.name) {
-                val context = LocalContext.current
-//                audioSearchBTN: () -> Unit,
-//                saveBTN: (String) -> Unit,
-//                goBackBTN: () -> Unit,
-//                showHidePopupBTN: () -> Unit,
-//                context: Context,
-//                modifier: Modifier = Modifier){
-                val showHidePopupBTN = fun(){}
-                SelectAudio(audioSearchBTN, saveBTN, goBackBTN, showHidePopupBTN, context)
-//                    subtotal = uiState.price,
-//                    onNextButtonClicked = { navController.navigate(AppScreen.Pickup.name) },
-//                    onCancelButtonClicked = {
-//                        cancelOrderAndNavigateToStart(viewModel, navController)
-//                    },
-//                    options = flavors.map { id -> context.resources.getString(id) },
-//                    onSelectionChanged = { viewModel.setFlavor(it) }
-//                )
-            }
-//            composable(route = AppScreen.Pickup.name) {
-//                SelectOptionScreen(
-//                    subtotal = uiState.price,
-//                    onNextButtonClicked = { navController.navigate(AppScreen.Summary.name) },
-//                    onCancelButtonClicked = {
-//                        cancelOrderAndNavigateToStart(viewModel, navController)
-//                    },
-//                    options = uiState.pickupOptions,
-//                    onSelectionChanged = { viewModel.setDate(it) }
-//                )
-//            }
-//            composable(route = AppScreen.Summary.name) {
 //                val context = LocalContext.current
-//                OrderSummaryScreen(
-//                    orderUiState = uiState,
-//                    onCancelButtonClicked = {
-//                        cancelOrderAndNavigateToStart(viewModel, navController)
-//                    },
-//                    onSendButtonClicked = { subject: String, summary: String ->
-//                        shareOrder(context, subject = subject, summary = summary)
-//                    }
-//                )
-//            }
+                SelectAudio(audioSearchBTN,
+                    discardBTN = {
+                        addNewAudioScreenObjectStatus.reset()
+                        MediaPlayerFW.reset()
+                        navController.navigate(AppScreen.Start.name)
+                    },
+                    saveBTN = {
+                        if(addNewAudioScreenObjectStatus.isSavable()) {
+                            DataBase.saveAudioinDB(context)
+                            addNewAudioScreenObjectStatus.reset()
+                            MediaPlayerFW.reset()
+                            navController.navigate(AppScreen.Start.name)
+                        }
+                    },
+                    context)
+            }
+
+            composable(route = AppScreen.Details.name) {
+//                val context = LocalContext.current
+                editAudioObjectStatus.selectedAudio?.let { it1 ->
+                    EditAudio(
+                        it1,
+                        discardBTN = {
+                            editAudioObjectStatus.reset()
+                            MediaPlayerFW.reset()
+                            navController.navigate(AppScreen.Start.name)
+                        },
+                        saveBTN = {
+                            DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
+                            MediaPlayerFW.reset()
+                            navController.navigate(AppScreen.Start.name)
+                        },
+                        deleteBTN = {
+                            DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!, context)
+                            MediaPlayerFW.reset()
+                            navController.navigate(AppScreen.Start.name)
+                        },
+                        context)
+                }
+            }
+
+
+
+
+
+
+
+
+
         }
     }
 }
-//
+
+
+
 ///**
 // * Resets the [OrderUiState] and pops up to [CupcakeScreen.Start]
 // */

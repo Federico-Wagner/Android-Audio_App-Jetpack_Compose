@@ -1,9 +1,6 @@
 package com.example.soundsapp.db.DAO
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.soundsapp.db.entity.Audio
 
 
@@ -28,5 +25,8 @@ abstract class AudioDAO {
 
     @Delete
     abstract fun deleteAll(audios: List<Audio>)
+
+    @Update
+    abstract fun updateByEntity(audio: Audio)
 
 }
