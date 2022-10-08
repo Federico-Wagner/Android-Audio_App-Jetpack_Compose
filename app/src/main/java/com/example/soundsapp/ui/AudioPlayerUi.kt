@@ -1,6 +1,7 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,16 +14,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.*
 
 
 @Composable
-fun PlayerControls( onTap: ()-> Unit, update: ()-> Unit,
-                   playerState : MediaPlayerFW.PlayerState, context: Context,
-                   modifier: Modifier = Modifier
+fun PlayerControls( onTap: ()-> Unit,
+                    update: ()-> Unit,
+                    playerState : MediaPlayerFW.PlayerState,
+                    context: Context,
+                    modifier: Modifier = Modifier
 ){
-    Row {
+    Row(modifier = modifier
+        .border(1.dp, color = Color.White, RoundedCornerShape(30))
+        .padding(horizontal = 10.dp)
+    ){
         StopBTN(update, playerState, context = context, modifier= modifier)
         Spacer(modifier = Modifier.padding(end = 10.dp))
         PlayBTN(null, playerState, onTap, context = context, modifier= modifier)
@@ -31,7 +38,7 @@ fun PlayerControls( onTap: ()-> Unit, update: ()-> Unit,
 
 @Composable
 fun PlayBTN(playPause : ImageVector?,
-    playerState : MediaPlayerFW.PlayerState?,
+            playerState : MediaPlayerFW.PlayerState?,
             onTap: () -> Unit,
             context: Context,
             modifier: Modifier = Modifier
@@ -47,7 +54,8 @@ fun PlayBTN(playPause : ImageVector?,
         enabled = true
     }else {
         // ADD AUDIO SCREEN
-        enabled = addNewAudioScreenObjectStatus.selectedAudioUri != null
+        enabled = addNewAudioScreenObjectStatus.selectedAudioUri != null ||
+                editAudioObjectStatus.selectedAudio != null
         icon = when (playerState) {
             MediaPlayerFW.PlayerState.STOP -> { Icons.Rounded.PlayArrow }
             MediaPlayerFW.PlayerState.PLAY -> { Icons.Rounded.Pause }

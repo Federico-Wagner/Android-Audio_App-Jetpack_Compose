@@ -89,6 +89,7 @@ object MediaPlayerFW {
     fun reset(){
         this.player.reset()
         this.state = PlayerState.STOP
+        this.currentAudioUri = null
     }
 
     //UI

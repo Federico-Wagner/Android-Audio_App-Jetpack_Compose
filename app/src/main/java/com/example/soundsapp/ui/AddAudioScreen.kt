@@ -143,7 +143,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             verticalAlignment = Alignment.CenterVertically,
         ){
             OutlinedTextField(
-                modifier = modifier.width(280.dp).padding(end = 20.dp),
+                modifier = modifier.width(260.dp).padding(end = 20.dp),
                 value =  audioFile,
                 onValueChange = {
                                     //no action due to readonly ppt - never reached

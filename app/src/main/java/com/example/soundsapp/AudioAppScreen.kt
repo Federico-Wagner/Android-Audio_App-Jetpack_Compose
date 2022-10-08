@@ -83,7 +83,12 @@ fun AudioAppScreen(
             NavigationAppBar(
                 currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
+                navigateUp = {
+                    MediaPlayerFW.reset()
+                    addNewAudioScreenObjectStatus.reset()
+                    editAudioObjectStatus.reset()
+                    navController.navigateUp()
+                }
             )
         }
     ) { innerPadding ->
@@ -97,17 +102,18 @@ fun AudioAppScreen(
             composable(route = AppScreen.Start.name) {
                 MainScreen(
                     DataBase.getAllRecords(),
-                    showHidePopupBTN = {
+                    navigateToNewAudio = {
+                        MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Select.name)
                     },
                     navigateToAudioDetail = {
+                        MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Details.name)
                     },
                     context
                 )
             }
             composable(route = AppScreen.Select.name) {
-//                val context = LocalContext.current
                 SelectAudio(audioSearchBTN,
                     discardBTN = {
                         addNewAudioScreenObjectStatus.reset()
@@ -126,10 +132,9 @@ fun AudioAppScreen(
             }
 
             composable(route = AppScreen.Details.name) {
-//                val context = LocalContext.current
-                editAudioObjectStatus.selectedAudio?.let { it1 ->
+                editAudioObjectStatus.selectedAudio?.let { selectedAudio ->
                     EditAudio(
-                        it1,
+                        selectedAudio,
                         discardBTN = {
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
@@ -137,26 +142,19 @@ fun AudioAppScreen(
                         },
                         saveBTN = {
                             DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
+                            editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
                         },
                         deleteBTN = {
                             DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!, context)
+                            editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
                         },
                         context)
                 }
             }
-
-
-
-
-
-
-
-
-
         }
     }
 }

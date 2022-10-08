@@ -37,11 +37,11 @@ import com.example.soundsapp.ui.theme.Purple700
 
 @Composable
 fun MainScreen( soundsDBx: List<Audio>,
-                showHidePopupBTN: () -> Unit,
+                navigateToNewAudio: () -> Unit,
                 navigateToAudioDetail: () -> Unit,
                 context: Context,
                 modifier : Modifier = Modifier){
-    val soundsDB by remember { mutableStateOf(soundsDBx) }  //TODO fix to update on resume
+    val soundsDB by remember { mutableStateOf(soundsDBx) }
 
     Scaffold(
         modifier = modifier.fillMaxWidth(),
@@ -71,9 +71,7 @@ fun MainScreen( soundsDBx: List<Audio>,
                 horizontalAlignment = Alignment.CenterHorizontally)
             {
             Spacer(modifier = modifier.padding(top = 15.dp))
-                ShowPopupBTN(showHidePopupBTN)
-//            DeleteAll()
-//            AddBtn(addAudioBTN)
+                addAudioBTN( navigateToNewAudio )
             Spacer(modifier = modifier.padding(top = 25.dp))
             Text(text = "Developed by Federico Wagner",
                 fontSize = 15.sp, modifier= Modifier.padding(bottom = 5.dp))
@@ -153,7 +151,7 @@ fun SoundCardDB( audio: Audio,
 }
 
 @Composable
-fun ShowPopupBTN(showHidePopupBTN : () -> Unit , modifier : Modifier = Modifier){
+fun addAudioBTN(navigateToNewAudio : () -> Unit , modifier : Modifier = Modifier){
     Box(modifier = modifier
         .clip(RoundedCornerShape(50)),
     ){
@@ -161,7 +159,7 @@ fun ShowPopupBTN(showHidePopupBTN : () -> Unit , modifier : Modifier = Modifier)
             contentDescription = "Show Popup",
             modifier = modifier
                 .clickable {
-                    showHidePopupBTN()
+                    navigateToNewAudio()
                 }
                 .size(50.dp)
                 .border(width = 3.dp, color = Green200, shape = CircleShape)
@@ -169,20 +167,19 @@ fun ShowPopupBTN(showHidePopupBTN : () -> Unit , modifier : Modifier = Modifier)
     }
 }
 
-@Composable
-fun DeleteAll(modifier : Modifier = Modifier){
-    Box(modifier = modifier
-        .clip(RoundedCornerShape(50)),
-    ){
-        Icon(Icons.Rounded.Add,
-            contentDescription = "Add Audio",
-            modifier = modifier
-                .clickable {
-                    DataBase.deleteAllRecords()
-                }
-                .size(60.dp)
-                .border(width = 3.dp, color = Purple700, shape = CircleShape)
-        )
-    }
-}
-
+//@Composable
+//fun DeleteAll(modifier : Modifier = Modifier){
+//    Box(modifier = modifier
+//        .clip(RoundedCornerShape(50)),
+//    ){
+//        Icon(Icons.Rounded.Add,
+//            contentDescription = "Add Audio",
+//            modifier = modifier
+//                .clickable {
+//                    DataBase.deleteAllRecords()
+//                }
+//                .size(60.dp)
+//                .border(width = 3.dp, color = Purple700, shape = CircleShape)
+//        )
+//    }
+//}

@@ -30,31 +30,22 @@ import com.example.soundsapp.ui.theme.Green500
 import com.example.soundsapp.ui.theme.Red300
 
 
-//object editAudioScreenObjectStatus{
-//    var selectedAudioUri: Uri? = null
-//    var selectedAudioPath: String? = null
-//    var selectedAudioUserName: String = ""
-//    var selectedAudioFileName: String = ""
-//    var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
-//
-//    fun reset(){
-//        this.selectedAudioUri =  null
-//        this.selectedAudioPath = null
-//        this.selectedAudioUserName = ""
-//        this.selectedAudioFileName = ""
-//        this.playerState = MediaPlayerFW.PlayerState.STOP
-//    }
-//    fun isSavable(): Boolean {
-//        return( this.selectedAudioUri != null &&
-//                this.selectedAudioUserName != "" &&
-//                this.selectedAudioPath != null &&
-//                this.selectedAudioFileName != "" )
-//    }
-//}
-
 object editAudioObjectStatus{
     var selectedAudio : Audio? = null
-    fun reset() { this.selectedAudio = null }
+    var originalAudioName : String = ""
+    var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
+
+    fun reset() {
+        this.selectedAudio = null
+        this.playerState = MediaPlayerFW.PlayerState.STOP
+    }
+    fun isSavable(): Boolean {
+        return ( this.selectedAudio!!.audioUserName != this.originalAudioName )
+    }
+    fun setAudio(audio: Audio) {
+        this.selectedAudio = audio
+        this.originalAudioName = audio.audioUserName
+    }
 }
 
 @Composable
@@ -65,6 +56,8 @@ fun EditAudio(  audio : Audio,
                 context: Context,
                 modifier: Modifier = Modifier
 ){
+    editAudioObjectStatus.setAudio(audio)
+
     Box(
         modifier = modifier
             .height(360.dp)
@@ -93,9 +86,8 @@ fun EditAudioLayOut(audio : Audio,
                     modifier: Modifier = Modifier
 )
 {
-    var audioName by remember { mutableStateOf(audio.audioUserName) }
-//    var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
-    var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
+    var audioName by remember { mutableStateOf(editAudioObjectStatus.selectedAudio!!.audioUserName) }
+    var playerState by remember { mutableStateOf(editAudioObjectStatus.playerState) }
 
     val onFinish = fun(){
         playerState = MediaPlayerFW.state
@@ -105,17 +97,14 @@ fun EditAudioLayOut(audio : Audio,
     }
     val onTap = fun(){
         MediaPlayerFW.tap(
-            context, Audio(
-                0, addNewAudioScreenObjectStatus.selectedAudioUserName,
-                addNewAudioScreenObjectStatus.selectedAudioFileName,
-                addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
-                addNewAudioScreenObjectStatus.selectedAudioPath.toString()
-            ),
-            onFinish)
+            context,
+            editAudioObjectStatus.selectedAudio!!,
+            onFinish
+        )
         update()
     }
 
-    val saveBtnColor = when ( addNewAudioScreenObjectStatus.isSavable() ) {
+    val saveBtnColor = when ( editAudioObjectStatus.isSavable() ) {
         true -> { Green200 }
         false -> { Green500 }
     }
@@ -134,7 +123,7 @@ fun EditAudioLayOut(audio : Audio,
             value = audioName,
             onValueChange = {
                 audioName = it
-                audio.audioUserName = it
+                editAudioObjectStatus.selectedAudio!!.audioUserName = it
             },
             label = { Text("Audio name: ") },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
@@ -148,35 +137,13 @@ fun EditAudioLayOut(audio : Audio,
         ){
             OutlinedTextField(
                 modifier = modifier.width(280.dp).padding(end = 20.dp),
-                value =  audio.audioFileName,
+                value =  editAudioObjectStatus.selectedAudio!!.audioFileName,
                 onValueChange = {
                     //no action due to readonly ppt - never reached
                 },
                 label = { Text("Selected file: ") },
                 readOnly = true
             )
-
-            //SEARCH AUDIO BUTTON
-//            Box(modifier = modifier
-//                .clip(RoundedCornerShape(30))
-//                .padding( top = 5.dp),
-//                contentAlignment = Alignment.Center
-//            ){
-//                Icon(Icons.Rounded.AttachFile,
-//                    contentDescription = "Search Audio",
-//                    modifier = modifier
-//                        .clickable {
-//                            if(MediaPlayerFW.player.isPlaying){ MediaPlayerFW.stop() }
-//                            audioSearchBTN()
-//                            audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
-//                            update()
-//                            playerState = MediaPlayerFW.PlayerState.STOP
-//                        }
-//                        .size(45.dp,55.dp)
-//                        .padding(6.dp)
-//                        .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
-//                )
-//            }
         }
 
         PlayerControls( onTap, update, playerState, context, modifier = modifier)
@@ -195,14 +162,16 @@ fun EditAudioLayOut(audio : Audio,
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red300),
-                onClick = { deleteBTN(audio) }
+                onClick = { deleteBTN(editAudioObjectStatus.selectedAudio!!) }
             ) {
                 Text(text = stringResource(R.string.delete), color = Black900, fontSize = 17.sp)
             }
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = saveBtnColor),
-                onClick = { saveBTN(audio) }
+                onClick = {
+                    if(editAudioObjectStatus.isSavable()){ saveBTN(editAudioObjectStatus.selectedAudio!!) }
+                }
             ) {
                 Text(text = stringResource(R.string.save), color = Black900, fontSize = 17.sp)
             }
