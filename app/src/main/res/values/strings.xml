@@ -3,7 +3,7 @@
     <string name="send_error">Error while sending the audio file</string>
     <string name="share">Share audio: $</string>
 
-    <string name="discard">Discard</string>
+    <string name="discard">Go back</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
 

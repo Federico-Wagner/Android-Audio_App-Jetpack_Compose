@@ -24,15 +24,20 @@ object DataBase {
         this.audioDao = _db.audioDAO()
     }
 
-    fun insertInDB(audioUserName: String,
-                   audioFileName: String,
-                   audioURI: Uri?,
-                    audioPath: String?) {
+    fun insertInDB( audioUserName: String,
+                    audioFileName: String,
+                    audioURI: Uri?,
+                    audioPath: String?,
+                    favorite: Boolean,
+                    groupID: Long) {
         val newAudio = Audio(0,
             audioUserName,
             audioFileName,
             audioURI.toString(),
-            audioPath.toString())
+            audioPath.toString(),
+            favorite,
+            groupID
+        )
         this.audioDao.insert(newAudio)
     }
 
@@ -53,7 +58,10 @@ object DataBase {
             addNewAudioScreenObjectStatus.selectedAudioUserName,
             addNewAudioScreenObjectStatus.selectedAudioFileName,
             addNewAudioScreenObjectStatus.selectedAudioUri,
-            addNewAudioScreenObjectStatus.selectedAudioPath
+            addNewAudioScreenObjectStatus.selectedAudioPath,
+            addNewAudioScreenObjectStatus.favorite,
+            addNewAudioScreenObjectStatus.groupId
+
         )
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()

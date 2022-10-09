@@ -32,6 +32,7 @@ import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.theme.Black900
+import com.example.soundsapp.ui.theme.Gold600
 import com.example.soundsapp.ui.theme.Purple700
 
 
@@ -113,10 +114,21 @@ fun SoundCardDB( audio: Audio,
         playPause = MediaPlayerFW.getIcon()
     }
 
-    Card(modifier = Modifier
-        .padding(8.dp)
-        .height(60.dp)
-        .clip(RoundedCornerShape(30)),
+    //FAVORITE BORDER
+    val favNoramlModifier: Modifier = when(audio.favorite){
+        true -> { Modifier
+            .padding(8.dp)
+            .height(60.dp)
+            .border(1.dp, color = Gold600, shape = RoundedCornerShape(30))
+            .clip(RoundedCornerShape(30))
+             }
+        false -> { Modifier
+            .padding(8.dp)
+            .height(60.dp)
+            .clip(RoundedCornerShape(30)) }
+    }
+
+    Card(modifier = favNoramlModifier,
         elevation = 5.dp
     ){
         Row(modifier = modifier.fillMaxHeight(),

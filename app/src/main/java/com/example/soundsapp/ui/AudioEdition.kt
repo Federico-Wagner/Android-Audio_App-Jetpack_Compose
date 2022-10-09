@@ -1,7 +1,6 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -10,12 +9,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AttachFile
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -24,10 +24,7 @@ import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
-import com.example.soundsapp.ui.theme.Black900
-import com.example.soundsapp.ui.theme.Green200
-import com.example.soundsapp.ui.theme.Green500
-import com.example.soundsapp.ui.theme.Red300
+import com.example.soundsapp.ui.theme.*
 
 
 object editAudioObjectStatus{
@@ -88,6 +85,9 @@ fun EditAudioLayOut(audio : Audio,
 {
     var audioName by remember { mutableStateOf(editAudioObjectStatus.selectedAudio!!.audioUserName) }
     var playerState by remember { mutableStateOf(editAudioObjectStatus.playerState) }
+    var favoriteState by remember { mutableStateOf(editAudioObjectStatus.selectedAudio!!.favorite) }
+
+
 
     val onFinish = fun(){
         playerState = MediaPlayerFW.state
@@ -103,10 +103,36 @@ fun EditAudioLayOut(audio : Audio,
         )
         update()
     }
-
     val saveBtnColor = when ( editAudioObjectStatus.isSavable() ) {
         true -> { Green200 }
         false -> { Green500 }
+    }
+
+    var starIcon : ImageVector
+    var starColor : Color
+    when (favoriteState) {
+        true -> {
+            starIcon = Icons.Default.Star
+            starColor = Gold600
+        }
+        false -> {
+            starIcon = Icons.Default.StarBorder
+            starColor = White300
+        }
+    }
+
+    val updateStar = fun(){
+        favoriteState = editAudioObjectStatus.selectedAudio!!.favorite
+        when (favoriteState) {
+            true -> {
+                starIcon = Icons.Default.Star
+                starColor = Gold600
+            }
+            false -> {
+                starIcon = Icons.Default.StarBorder
+                starColor = White300
+            }
+        }
     }
 
     Column(
@@ -117,18 +143,30 @@ fun EditAudioLayOut(audio : Audio,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // AUDIO NAME FROM USER
-        OutlinedTextField(
+        Row(
             modifier = modifier
                 .fillMaxWidth(),
-            value = audioName,
-            onValueChange = {
-                audioName = it
-                editAudioObjectStatus.selectedAudio!!.audioUserName = it
-            },
-            label = { Text("Audio name: ") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedTextField(
+                modifier = modifier
+                    .width(280.dp).padding(end = 20.dp),
+                value = audioName,
+                onValueChange = {
+                    audioName = it
+                    editAudioObjectStatus.selectedAudio!!.audioUserName = it
+                },
+                label = { Text("Audio name: ") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            )
+            Icon(starIcon, contentDescription = "Favorite star", tint = starColor,
+                modifier = Modifier
+                    .clickable {
+                        editAudioObjectStatus.selectedAudio!!.favorite = !editAudioObjectStatus.selectedAudio!!.favorite
+                        updateStar()
+                        DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
+                    })
+        }
         // AUDIO FILE NAME FROM URI
         Row(
             modifier = modifier

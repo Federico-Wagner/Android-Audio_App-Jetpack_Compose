@@ -1,6 +1,5 @@
 package com.example.soundsapp.db.entity
 
-import android.net.Uri
 import androidx.room.*
 
 
@@ -11,5 +10,7 @@ data class Audio(
     @ColumnInfo(name = "audio_user_name") var audioUserName: String,
     @ColumnInfo(name = "audio_file_name") var audioFileName: String,
     @ColumnInfo(name = "audio_file_uri") var audioURI: String,
-    @ColumnInfo(name = "audio_file_pathi") var audioPath: String
+    @ColumnInfo(name = "audio_file_pathi") var audioPath: String,
+    @ColumnInfo(name = "favorite") var favorite: Boolean,
+    @ColumnInfo(name = "group_id") var groupId: Long
 )
