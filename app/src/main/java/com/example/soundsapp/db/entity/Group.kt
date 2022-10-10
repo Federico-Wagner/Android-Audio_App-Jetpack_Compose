@@ -6,6 +6,6 @@ import androidx.room.*
 data class Group (
     @PrimaryKey(autoGenerate = true)
     var id: Long,
-    @ColumnInfo(name = "group_name") var group: String
+    @ColumnInfo(name = "group_name") var groupName: String
 )
 

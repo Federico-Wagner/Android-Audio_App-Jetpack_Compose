@@ -12,5 +12,5 @@ data class Audio(
     @ColumnInfo(name = "audio_file_uri") var audioURI: String,
     @ColumnInfo(name = "audio_file_pathi") var audioPath: String,
     @ColumnInfo(name = "favorite") var favorite: Boolean,
-    @ColumnInfo(name = "group_id") var groupId: Long
+    @ColumnInfo(name = "group_id") var groupId: Long?
 )

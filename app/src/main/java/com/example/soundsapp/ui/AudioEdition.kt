@@ -108,18 +108,19 @@ fun EditAudioLayOut(audio : Audio,
         false -> { Green500 }
     }
 
-    var starIcon : ImageVector
-    var starColor : Color
-    when (favoriteState) {
-        true -> {
-            starIcon = Icons.Default.Star
-            starColor = Gold600
-        }
-        false -> {
-            starIcon = Icons.Default.StarBorder
-            starColor = White300
-        }
-    }
+    var starIcon : ImageVector = Icons.Default.StarBorder
+    var starColor : Color = White300
+//    when (favoriteState) {
+//        true -> {
+//            starIcon = Icons.Default.Star
+//            starColor = Gold600
+//        }
+//        false -> {
+//            starIcon = Icons.Default.StarBorder
+//            starColor = White300
+//        }
+//    }
+
 
     val updateStar = fun(){
         favoriteState = editAudioObjectStatus.selectedAudio!!.favorite
@@ -134,6 +135,7 @@ fun EditAudioLayOut(audio : Audio,
             }
         }
     }
+    updateStar()
 
     Column(
         modifier = modifier
@@ -161,6 +163,7 @@ fun EditAudioLayOut(audio : Audio,
             )
             Icon(starIcon, contentDescription = "Favorite star", tint = starColor,
                 modifier = Modifier
+                    .size(45.dp)
                     .clickable {
                         editAudioObjectStatus.selectedAudio!!.favorite = !editAudioObjectStatus.selectedAudio!!.favorite
                         updateStar()

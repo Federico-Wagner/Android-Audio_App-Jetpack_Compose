@@ -5,13 +5,16 @@ import android.net.Uri
 import androidx.room.Room
 import com.example.soundsapp.db.AudiosDataBase
 import com.example.soundsapp.db.DAO.AudioDAO
+import com.example.soundsapp.db.DAO.GroupDAO
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 
 
 object DataBase {
     lateinit var db: AudiosDataBase
     private lateinit var audioDao : AudioDAO
+    private lateinit var groupDao : GroupDAO
 
     fun createDB(applicationContext: Context){
         val _db = Room.databaseBuilder(
@@ -22,6 +25,15 @@ object DataBase {
             .build()
         this.db = _db
         this.audioDao = _db.audioDAO()
+        this.groupDao = _db.groupDAO()
+    }
+
+    fun groupCreate(newGroupName : String){
+        val newGroup = Group(0, newGroupName)
+        this.groupDao.insert(newGroup)
+    }
+    fun groupGetAll(): List<Group> {
+        return this.groupDao.getAll()
     }
 
     fun insertInDB( audioUserName: String,
@@ -29,14 +41,14 @@ object DataBase {
                     audioURI: Uri?,
                     audioPath: String?,
                     favorite: Boolean,
-                    groupID: Long) {
+                    groupId: Long?) {  //TODO remove nullleable value
         val newAudio = Audio(0,
             audioUserName,
             audioFileName,
             audioURI.toString(),
             audioPath.toString(),
             favorite,
-            groupID
+            groupId
         )
         this.audioDao.insert(newAudio)
     }
@@ -60,7 +72,7 @@ object DataBase {
             addNewAudioScreenObjectStatus.selectedAudioUri,
             addNewAudioScreenObjectStatus.selectedAudioPath,
             addNewAudioScreenObjectStatus.favorite,
-            addNewAudioScreenObjectStatus.groupId
+            null
 
         )
         //Clean addNewAudioScreenObjectStatus

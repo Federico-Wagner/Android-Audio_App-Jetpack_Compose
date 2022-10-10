@@ -2,29 +2,21 @@ package com.example.soundsapp.ui
 
 import android.content.Context
 import android.net.Uri
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AttachFile
-import androidx.compose.material.icons.rounded.UploadFile
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -40,7 +32,6 @@ object addNewAudioScreenObjectStatus{
     var selectedAudioUserName: String = ""
     var selectedAudioFileName: String = ""
     var favorite: Boolean = false   //TODO hardcoded value
-    var groupId: Long = 15          //TODO hardcoded value
 
     var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
 
@@ -50,7 +41,6 @@ object addNewAudioScreenObjectStatus{
         this.selectedAudioUserName = ""
         this.selectedAudioFileName = ""
         this.favorite = false        //TODO hardcoded value
-        this.groupId = 15           //TODO hardcoded value
         this.playerState = MediaPlayerFW.PlayerState.STOP
     }
     fun isSavable(): Boolean {
@@ -112,7 +102,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
                 addNewAudioScreenObjectStatus.selectedAudioPath.toString(),
                 addNewAudioScreenObjectStatus.favorite,
-                addNewAudioScreenObjectStatus.groupId
+                null
             ),
             onFinish)
         update()

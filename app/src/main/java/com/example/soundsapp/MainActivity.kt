@@ -15,7 +15,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.example.soundsapp.db.DAO.GroupDAO
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
@@ -70,6 +72,10 @@ class MainActivity : ComponentActivity() {
 
         DataBase.createDB(applicationContext)
         MediaPlayerFW.reset()
+
+        if(DataBase.groupGetAll().size == 0){
+            DataBase.groupCreate("General")
+        }
 
         setContent {
             SoundsAppTheme(darkTheme = true) {
