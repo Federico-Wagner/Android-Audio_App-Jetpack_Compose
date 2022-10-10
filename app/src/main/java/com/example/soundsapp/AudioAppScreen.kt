@@ -101,7 +101,9 @@ fun AudioAppScreen(
         ) {
             composable(route = AppScreen.Start.name) {
                 MainScreen(
+//                    DataBase.getAllRecords(),
                     DataBase.getAllRecords(),
+                    DataBase.getAllGroups(),
                     navigateToNewAudio = {
                         DataBase.showGroupsRecords()
                         DataBase.showAudioRecords()
@@ -138,6 +140,7 @@ fun AudioAppScreen(
                 editAudioObjectStatus.selectedAudio?.let { selectedAudio ->
                     EditAudio(
                         selectedAudio,
+                        DataBase.getAllGroups(),
                         discardBTN = {
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()

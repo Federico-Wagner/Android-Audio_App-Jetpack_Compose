@@ -18,20 +18,12 @@ abstract class AudioDAO {
     abstract fun findById(id: Int): Audio
 
 
-//    @Query(
-//        "SELECT * FROM audios " +
-//        "INNER JOIN groups ON groups.id = audios.id"
-//    )
-////    abstract fun loadAudiosWithGroups(): Map<Audio, List<Group>>
-////    abstract fun loadAudiosWithGroups(): List<Audio>
-////    abstract fun loadAudiosWithGroups(): Map<Audio, List<Group>>
-//    abstract fun loadAudiosWithGroups2(): List<Audio>
-
     @Query(
         "SELECT * FROM audios " +
-                "JOIN groups ON audios.group_id = groups.group_id "
+                "JOIN groups ON audios.group_id = groups.group_id " +
+                " ORDER BY audios.favorite DESC"
     )
-    abstract fun loadAudiosWithGroups(): Map<Audio, Group>
+    abstract fun loadAudiosWithGroupsAndSortedByFavorite(): Map<Audio, Group>
 
     fun insert(entity: Audio): Audio {
         entity.id = getNextId(entity) //id re-assignation for avoid db crash on unique PK constraint

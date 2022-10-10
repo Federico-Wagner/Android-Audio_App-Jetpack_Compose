@@ -32,7 +32,7 @@ object DataBase {
         val newGroup = Group(0, newGroupName)
         this.groupDao.insert(newGroup)
     }
-    fun groupGetAll(): List<Group> {
+    fun getAllGroups(): List<Group> {
         return this.groupDao.getAll()
     }
 
@@ -80,7 +80,7 @@ object DataBase {
 
     fun showAudioRecords() {
         println("audios:  TRY")
-        val audios: Map<Audio, Group> = this.audioDao.loadAudiosWithGroups()
+        val audios: Map<Audio, Group> = this.audioDao.loadAudiosWithGroupsAndSortedByFavorite()
         audios.forEach {
             println(
                 "---------------------\n" +
@@ -109,10 +109,14 @@ object DataBase {
             )
         }
     }
+
+    fun getAllRecordsFull(): Map<Audio, Group> {
+        return this.audioDao.loadAudiosWithGroupsAndSortedByFavorite()
+    }
+
     fun getAllRecords(): List<Audio> {
         return this.audioDao.getAllSortedByFavorite()
     }
-
     fun deleteAllRecords() {
         this.audioDao.deleteAll(this.getAllRecords())
     }

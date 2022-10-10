@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.soundsapp.ui.theme.Green200
 import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
@@ -38,6 +39,7 @@ import com.example.soundsapp.ui.theme.Purple700
 
 @Composable
 fun MainScreen( soundsDBx: List<Audio>,
+                groups: List<Group>,
                 navigateToNewAudio: () -> Unit,
                 navigateToAudioDetail: () -> Unit,
                 context: Context,

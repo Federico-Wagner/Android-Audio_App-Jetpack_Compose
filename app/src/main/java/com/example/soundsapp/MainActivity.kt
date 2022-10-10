@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
 
         DataBase.createDB(applicationContext)
 
-        if(DataBase.groupGetAll().size == 0){ //TODO use next ID check if it works
+        if(DataBase.getAllGroups().size == 0){ //TODO use next ID check if it works
             DataBase.groupCreate("General")
             DataBase.groupCreate("GRP-TEST-1")
             DataBase.groupCreate("GRP-TEST-2")
