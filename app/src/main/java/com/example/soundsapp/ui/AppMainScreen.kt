@@ -67,17 +67,18 @@ fun MainScreen( soundsDBx: List<Audio>,
             }
         },
         bottomBar = {
-            Column(
-                Modifier.fillMaxWidth().background(color = Color.Black),
-                horizontalAlignment = Alignment.CenterHorizontally)
-            {
-            Spacer(modifier = modifier.padding(top = 15.dp))
-                addAudioBTN( navigateToNewAudio )
-            Spacer(modifier = modifier.padding(top = 25.dp))
-            Text(text = "Developed by Federico Wagner",
-                fontSize = 15.sp, modifier= Modifier.padding(bottom = 5.dp))
+            Column(modifier.fillMaxWidth().background(color = Color.Black)){
+                Spacer(modifier = modifier.padding(5.dp))
+                Row( modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically)
+                {
+                    Text(text = "Developed by Federico Wagner",
+                        fontSize = 13.sp, modifier= Modifier.padding(bottom = 5.dp))
+                    addAudioBTN( navigateToNewAudio )
+                }
+                Spacer(modifier = modifier.padding(5.dp))
             }
-            Spacer(modifier = modifier.padding(bottom = 25.dp))
         }
     ) {
         Column(

@@ -72,7 +72,7 @@ object DataBase {
             addNewAudioScreenObjectStatus.selectedAudioUri,
             addNewAudioScreenObjectStatus.selectedAudioPath,
             addNewAudioScreenObjectStatus.favorite,
-            null
+            0
 
         )
         //Clean addNewAudioScreenObjectStatus

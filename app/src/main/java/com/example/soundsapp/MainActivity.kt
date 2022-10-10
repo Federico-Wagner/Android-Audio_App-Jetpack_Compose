@@ -26,7 +26,6 @@ import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 class MainActivity : ComponentActivity() {
     private val TAG = "MainActivity"
-    lateinit var dataBaseRows : List<Audio>
 
     val audioSearchBTN = fun() {
         val intent = Intent()
@@ -71,7 +70,6 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "onCreate Called")
 
         DataBase.createDB(applicationContext)
-        MediaPlayerFW.reset()
 
         if(DataBase.groupGetAll().size == 0){
             DataBase.groupCreate("General")
@@ -88,35 +86,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart Called")
-    }
-    override fun onResume() {
-        super.onResume()
-        this.dataBaseRows = DataBase.getAllRecords()
-        Log.d(TAG, "onResume Called")
-    }
-    override fun onRestart() {
-        super.onRestart()
-        this.dataBaseRows = DataBase.getAllRecords()
-        Log.d(TAG, "onRestart Called")
-    }
-    override fun onPause() {
-        super.onPause()
-        this.dataBaseRows = DataBase.getAllRecords()
-        Log.d(TAG, "onPause Called")
-    }
-    override fun onStop() {
-        super.onStop()
-        this.dataBaseRows = DataBase.getAllRecords()
-        Log.d(TAG, "onStop Called")
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        this.dataBaseRows = DataBase.getAllRecords()
-        Log.d(TAG, "onDestroy Called")
     }
 }

@@ -108,20 +108,10 @@ fun EditAudioLayOut(audio : Audio,
         false -> { Green500 }
     }
 
+    //DEFAULT STAR
     var starIcon : ImageVector = Icons.Default.StarBorder
     var starColor : Color = White300
-//    when (favoriteState) {
-//        true -> {
-//            starIcon = Icons.Default.Star
-//            starColor = Gold600
-//        }
-//        false -> {
-//            starIcon = Icons.Default.StarBorder
-//            starColor = White300
-//        }
-//    }
-
-
+    // DEFAULT / FAV STAR SELECTION
     val updateStar = fun(){
         favoriteState = editAudioObjectStatus.selectedAudio!!.favorite
         when (favoriteState) {
@@ -184,6 +174,20 @@ fun EditAudioLayOut(audio : Audio,
                 },
                 label = { Text("Selected file: ") },
                 readOnly = true
+            )
+        }
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ){
+            OutlinedTextField(  //TODO implement proper selector
+                modifier = modifier.width(280.dp).padding(end = 20.dp),
+                value =  editAudioObjectStatus.selectedAudio!!.groupId.toString(),
+                onValueChange = {
+                    //TODO implement logic
+                },
+                label = { Text("Audio group") }
             )
         }
 
