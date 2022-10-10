@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -62,7 +63,7 @@ fun EditAudio(  audio : Audio,
             .padding(horizontal = 8.dp, vertical = 12.dp)
             .background(Black900, RoundedCornerShape(10.dp))
             .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-            .clickable(enabled = false) {  }
+            .clickable(enabled = false) { }
 
     ) {
         EditAudioLayOut(
@@ -130,7 +131,7 @@ fun EditAudioLayOut(audio : Audio,
     Column(
         modifier = modifier
             .height(400.dp)
-            .padding(horizontal = 18.dp),
+            .padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -142,7 +143,8 @@ fun EditAudioLayOut(audio : Audio,
         ) {
             OutlinedTextField(
                 modifier = modifier
-                    .width(280.dp).padding(end = 20.dp),
+                    .width(270.dp)
+                    .padding(end = 10.dp),
                 value = audioName,
                 onValueChange = {
                     audioName = it
@@ -151,11 +153,14 @@ fun EditAudioLayOut(audio : Audio,
                 label = { Text("Audio name: ") },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
+            Spacer(modifier= modifier.padding(5.dp))
             Icon(starIcon, contentDescription = "Favorite star", tint = starColor,
                 modifier = Modifier
-                    .size(45.dp)
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(50))
                     .clickable {
-                        editAudioObjectStatus.selectedAudio!!.favorite = !editAudioObjectStatus.selectedAudio!!.favorite
+                        editAudioObjectStatus.selectedAudio!!.favorite =
+                            !editAudioObjectStatus.selectedAudio!!.favorite
                         updateStar()
                         DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
                     })
@@ -167,7 +172,9 @@ fun EditAudioLayOut(audio : Audio,
             verticalAlignment = Alignment.CenterVertically,
         ){
             OutlinedTextField(
-                modifier = modifier.width(280.dp).padding(end = 20.dp),
+                modifier = modifier
+                    .width(280.dp)
+                    .padding(end = 20.dp),
                 value =  editAudioObjectStatus.selectedAudio!!.audioFileName,
                 onValueChange = {
                     //no action due to readonly ppt - never reached
@@ -182,7 +189,9 @@ fun EditAudioLayOut(audio : Audio,
             verticalAlignment = Alignment.CenterVertically,
         ){
             OutlinedTextField(  //TODO implement proper selector
-                modifier = modifier.width(280.dp).padding(end = 20.dp),
+                modifier = modifier
+                    .width(280.dp)
+                    .padding(end = 20.dp),
                 value =  editAudioObjectStatus.selectedAudio!!.groupId.toString(),
                 onValueChange = {
                     //TODO implement logic
@@ -190,16 +199,17 @@ fun EditAudioLayOut(audio : Audio,
                 label = { Text("Audio group") }
             )
         }
-
+        Spacer(modifier = modifier.padding(8.dp))
         PlayerControls( onTap, update, playerState, context, modifier = modifier)
 
         Row(modifier = modifier
             .fillMaxWidth()
-            ,horizontalArrangement = Arrangement.SpaceEvenly
+            ,horizontalArrangement = Arrangement.SpaceBetween
         ){
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                shape = RoundedCornerShape(40),
                 onClick = { discardBTN() }
             ) {
                 Text(text = stringResource(R.string.discard), color = Black900, fontSize = 17.sp)
@@ -207,6 +217,7 @@ fun EditAudioLayOut(audio : Audio,
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red300),
+                shape = RoundedCornerShape(40),
                 onClick = { deleteBTN(editAudioObjectStatus.selectedAudio!!) }
             ) {
                 Text(text = stringResource(R.string.delete), color = Black900, fontSize = 17.sp)
@@ -214,6 +225,7 @@ fun EditAudioLayOut(audio : Audio,
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = saveBtnColor),
+                shape = RoundedCornerShape(40),
                 onClick = {
                     if(editAudioObjectStatus.isSavable()){ saveBTN(editAudioObjectStatus.selectedAudio!!) }
                 }

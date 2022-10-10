@@ -183,6 +183,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                shape = RoundedCornerShape(40),
                 onClick = { discardBTN() }
             ) {
                 Text(text = stringResource( R.string.discard), color = Black900, fontSize = 17.sp)
@@ -190,6 +191,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             Button(
                 modifier = modifier.padding(top = 15.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = saveBtnColor),
+                shape = RoundedCornerShape(40),
                 onClick = { saveBTN(audioName) }
             ) {
                 Text(text = stringResource( R.string.save), color = Black900, fontSize = 17.sp)
