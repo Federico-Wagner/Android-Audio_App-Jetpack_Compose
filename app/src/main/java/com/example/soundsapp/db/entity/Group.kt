@@ -5,7 +5,7 @@ import androidx.room.*
 @Entity(tableName = "groups")
 data class Group (
     @PrimaryKey(autoGenerate = true)
-    var id: Long,
+    @ColumnInfo(name = "group_id") var groupId: Long,
     @ColumnInfo(name = "group_name") var groupName: String
 )
 

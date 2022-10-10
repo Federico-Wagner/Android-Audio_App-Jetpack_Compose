@@ -12,7 +12,7 @@ abstract class GroupDAO {
     abstract fun getAll(): List<Group>
 
     fun insert(entity: Group): Group {
-        entity.id = getNextId(entity) //id re-assignation for avoid db crash on unique PK constraint
+        entity.groupId = getNextId(entity) //id re-assignation for avoid db crash on unique PK constraint
         return entity
     }
     @Insert

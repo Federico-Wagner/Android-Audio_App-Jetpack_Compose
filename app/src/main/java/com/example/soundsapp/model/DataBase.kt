@@ -72,33 +72,47 @@ object DataBase {
             addNewAudioScreenObjectStatus.selectedAudioUri,
             addNewAudioScreenObjectStatus.selectedAudioPath,
             addNewAudioScreenObjectStatus.favorite,
-            0
-
+            addNewAudioScreenObjectStatus.groupId
         )
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()
     }
 
-
-
-    fun showRecords() {
-        println("audios:")
-        val audios: List<Audio> = this.audioDao.getAll()
+    fun showAudioRecords() {
+        println("audios:  TRY")
+        val audios: Map<Audio, Group> = this.audioDao.loadAudiosWithGroups()
         audios.forEach {
             println(
                 "---------------------\n" +
-                        it.id + " - " +
-                        it.audioUserName + " - " +
-                        it.audioFileName + "\n" +
-                        it.audioURI + "\n" +
-                        it.audioPath +
+                        it.key.id+ " - " +
+                        it.key.audioUserName + " - " +
+                        it.key.audioFileName + "\n" +
+                        it.key.audioURI + "\n" +
+                        it.key.audioPath + "\n" +
+                        it.key.groupId + "\n" +
+                        it.key.favorite + "\n" +
+                        it.value.groupName +
+                        "\n----------------------"
+            )
+        }
+    }
+
+    fun showGroupsRecords() {
+        println("grops:")
+        val groups: List<Group> = this.groupDao.getAll()
+        groups.forEach {
+            println(
+                "---------------------\n" +
+                        it.groupId + " - " +
+                        it.groupName +
                         "\n----------------------"
             )
         }
     }
     fun getAllRecords(): List<Audio> {
-        return this.audioDao.getAll()
+        return this.audioDao.getAllSortedByFavorite()
     }
+
     fun deleteAllRecords() {
         this.audioDao.deleteAll(this.getAllRecords())
     }

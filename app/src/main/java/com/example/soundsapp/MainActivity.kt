@@ -71,9 +71,14 @@ class MainActivity : ComponentActivity() {
 
         DataBase.createDB(applicationContext)
 
-        if(DataBase.groupGetAll().size == 0){
+        if(DataBase.groupGetAll().size == 0){ //TODO use next ID check if it works
             DataBase.groupCreate("General")
+            DataBase.groupCreate("GRP-TEST-1")
+            DataBase.groupCreate("GRP-TEST-2")
         }
+
+        DataBase.showGroupsRecords()
+
 
         setContent {
             SoundsAppTheme(darkTheme = true) {

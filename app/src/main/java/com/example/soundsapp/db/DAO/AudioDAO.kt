@@ -10,22 +10,37 @@ abstract class AudioDAO {
     @Query("SELECT * FROM audios")
     abstract fun getAll(): List<Audio>
 
+    @Query("SELECT * FROM audios " +
+            "ORDER BY audios.favorite DESC")
+    abstract fun getAllSortedByFavorite(): List<Audio>
+
     @Query("SELECT * FROM audios WHERE id = :id")
     abstract fun findById(id: Int): Audio
 
 
+//    @Query(
+//        "SELECT * FROM audios " +
+//        "INNER JOIN groups ON groups.id = audios.id"
+//    )
+////    abstract fun loadAudiosWithGroups(): Map<Audio, List<Group>>
+////    abstract fun loadAudiosWithGroups(): List<Audio>
+////    abstract fun loadAudiosWithGroups(): Map<Audio, List<Group>>
+//    abstract fun loadAudiosWithGroups2(): List<Audio>
+
     @Query(
         "SELECT * FROM audios " +
-                "JOIN groups ON audios.group_id = groups.id"
+                "JOIN groups ON audios.group_id = groups.group_id "
     )
-    abstract fun loadAudiosWithGroups(): Map<Audio, List<Group>>
-
-
+    abstract fun loadAudiosWithGroups(): Map<Audio, Group>
 
     fun insert(entity: Audio): Audio {
         entity.id = getNextId(entity) //id re-assignation for avoid db crash on unique PK constraint
         return entity
     }
+
+    //FUTURE FEATURE !!!
+    @Query("SELECT * FROM audios WHERE audio_user_name LIKE :search ")
+    abstract fun findAudiosByName(search: String): List<Audio>
 
     @Insert
     abstract fun getNextId(entity: Audio): Long

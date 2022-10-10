@@ -32,6 +32,7 @@ object addNewAudioScreenObjectStatus{
     var selectedAudioUserName: String = ""
     var selectedAudioFileName: String = ""
     var favorite: Boolean = false   //TODO hardcoded value
+    var groupId: Long = 1 //GENERAL GRP
 
     var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
 
@@ -41,6 +42,7 @@ object addNewAudioScreenObjectStatus{
         this.selectedAudioUserName = ""
         this.selectedAudioFileName = ""
         this.favorite = false        //TODO hardcoded value
+        this.groupId = 1
         this.playerState = MediaPlayerFW.PlayerState.STOP
     }
     fun isSavable(): Boolean {
@@ -102,7 +104,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
                 addNewAudioScreenObjectStatus.selectedAudioPath.toString(),
                 addNewAudioScreenObjectStatus.favorite,
-                null
+                1 //GENERAL GROUP
             ),
             onFinish)
         update()

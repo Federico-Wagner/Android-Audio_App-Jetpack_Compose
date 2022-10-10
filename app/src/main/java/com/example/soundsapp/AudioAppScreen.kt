@@ -103,6 +103,9 @@ fun AudioAppScreen(
                 MainScreen(
                     DataBase.getAllRecords(),
                     navigateToNewAudio = {
+                        DataBase.showGroupsRecords()
+                        DataBase.showAudioRecords()
+
                         MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Select.name)
                     },
