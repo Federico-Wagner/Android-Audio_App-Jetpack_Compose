@@ -94,7 +94,6 @@ fun GroupManagerDELETE(modifier: Modifier = Modifier){
     else
         Icons.Filled.KeyboardArrowDown
 
-
     //GROUP
     Column() {
         Row(

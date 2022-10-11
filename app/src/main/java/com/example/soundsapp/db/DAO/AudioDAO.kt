@@ -17,6 +17,8 @@ abstract class AudioDAO {
     @Query("SELECT * FROM audios WHERE id = :id")
     abstract fun findById(id: Int): Audio
 
+    @Query("SELECT * FROM audios WHERE audios.group_id = :groupId")
+    abstract fun getAudiosByGroupIdAndSortedByFavorite(groupId: Int): List<Audio>
 
     @Query(
         "SELECT * FROM audios " +
@@ -45,5 +47,6 @@ abstract class AudioDAO {
 
     @Update
     abstract fun updateByEntity(audio: Audio)
-
+    @Update
+    abstract fun updateByEntityList(audioList: List<Audio>)
 }

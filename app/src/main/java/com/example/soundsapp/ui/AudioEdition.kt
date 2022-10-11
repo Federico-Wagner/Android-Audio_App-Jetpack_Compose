@@ -189,7 +189,7 @@ fun EditAudioLayOut(audio : Audio,
                         editAudioObjectStatus.selectedAudio!!.favorite =
                             !editAudioObjectStatus.selectedAudio!!.favorite
                         updateStar()
-                        DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
+                        DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!)
                     })
         }
         // AUDIO FILE NAME FROM URI

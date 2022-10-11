@@ -144,13 +144,13 @@ fun AudioAppScreen(
                             navController.navigate(AppScreen.Start.name)
                         },
                         saveBTN = {
-                            DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!, context)
+                            DataBase.updateAudioInDB(editAudioObjectStatus.selectedAudio!!)
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
                         },
                         deleteBTN = {
-                            DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!, context)
+                            DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!)
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)

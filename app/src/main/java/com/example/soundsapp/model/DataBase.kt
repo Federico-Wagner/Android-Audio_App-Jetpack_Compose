@@ -3,6 +3,7 @@ package com.example.soundsapp.model
 import android.content.Context
 import android.net.Uri
 import androidx.room.Room
+import androidx.room.Update
 import com.example.soundsapp.db.AudiosDataBase
 import com.example.soundsapp.db.DAO.AudioDAO
 import com.example.soundsapp.db.DAO.GroupDAO
@@ -15,7 +16,7 @@ object DataBase {
     lateinit var db: AudiosDataBase
     private lateinit var audioDao : AudioDAO
     private lateinit var groupDao : GroupDAO
-
+    //WARMUP
     fun createDB(applicationContext: Context){
         val _db = Room.databaseBuilder(
             applicationContext,
@@ -28,6 +29,8 @@ object DataBase {
         this.groupDao = _db.groupDAO()
     }
 
+    //GROUPS
+    //CREATE
     fun groupCreate(newGroupName : String, editable: Boolean){
         val newGroup = Group(0, newGroupName, editable)
         this.groupDao.insert(newGroup)
@@ -41,12 +44,36 @@ object DataBase {
             false
         }
     }
+    //READ
     fun getAllGroups(): List<Group> {
         return this.groupDao.getAll()
     }
-
+    //UPDATE
+    fun updateByEntity(group: Group, newGroupName: String): Boolean{
+        //check if newName does not exist in DB
+        return if(this.groupDao.getGroupByName(newGroupName) != null){
+            group.groupName = newGroupName
+            this.groupDao.updateByEntity(group)
+            true
+        }else{
+            false
+        }
+    }
+    //DELETE
     fun deleteGroupByEntitySAFE(group: Group): Boolean {
         return if( group.isEditable ){                     // GROUP IS EDITABLE
+            //generate safe deletion for this group
+            var audiosInThisGroup : List<Audio> = this.getAllRecordsInGroup(group)
+
+            fun changeToGeneralGroup(audio: Audio): Audio{
+                audio.groupId = 1 //"General" GroupID
+                return audio
+            }
+            audiosInThisGroup = audiosInThisGroup.map { changeToGeneralGroup(it) };
+
+            //migrating current audios int his group to "GENERAL" group
+            DataBase.updateAudiosInDBByList(audiosInThisGroup)
+            //Deletion of the group
             this.groupDao.deleteByEntity(group)
             true
         }else {
@@ -55,8 +82,8 @@ object DataBase {
     }
 
 
-
-
+    //AUDIOS
+    //CREATE
     fun insertInDB( audioUserName: String,
                     audioFileName: String,
                     audioURI: Uri?,
@@ -73,18 +100,6 @@ object DataBase {
         )
         this.audioDao.insert(newAudio)
     }
-
-    fun updateAudioInDB(audio: Audio, context: Context) {
-        //update in DB
-        this.audioDao.updateByEntity(audio)
-    }
-
-    fun deleteAudio(audio: Audio, context: Context) {
-        //Remove audio from DB
-        this.audioDao.deleteByEntity(audio)
-        //TODO Revoke app file access
-    }
-
     fun saveAudioinDB(context: Context) {
         //persist in DB
         DataBase.insertInDB(
@@ -98,6 +113,38 @@ object DataBase {
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()
     }
+    //READ
+    fun getAllRecords(): List<Audio> {
+        return this.audioDao.getAllSortedByFavorite()
+    }
+    fun getAllRecordsInGroup(group: Group): List<Audio> {
+        return this.audioDao.getAudiosByGroupIdAndSortedByFavorite(group.groupId.toInt())
+    }
+    //UPDATE
+    fun updateAudioInDB(audio: Audio) {
+        //update in DB
+        this.audioDao.updateByEntity(audio)
+    }
+    fun updateAudiosInDBByList(audiosList: List<Audio>) {
+        //update in DB
+        this.audioDao.updateByEntityList(audiosList)
+    }
+    //DELETE
+    fun deleteAudio(audio: Audio) {
+        //Remove audio from DB
+        this.audioDao.deleteByEntity(audio)
+        //TODO Revoke app file access
+    }
+    fun deleteAllRecords() {
+        this.audioDao.deleteAll(this.getAllRecords())
+    }
+
+
+    //AUDIO & GROUPS
+    fun getAllRecordsFull(): Map<Audio, Group> {
+        return this.audioDao.loadAudiosWithGroupsAndSortedByFavorite()
+    }
+
 
     fun showAudioRecords() {
         println("audios:  TRY")
@@ -117,7 +164,6 @@ object DataBase {
             )
         }
     }
-
     fun showGroupsRecords() {
         println("grops:")
         val groups: List<Group> = this.groupDao.getAll()
@@ -129,16 +175,5 @@ object DataBase {
                         "\n----------------------"
             )
         }
-    }
-
-    fun getAllRecordsFull(): Map<Audio, Group> {
-        return this.audioDao.loadAudiosWithGroupsAndSortedByFavorite()
-    }
-
-    fun getAllRecords(): List<Audio> {
-        return this.audioDao.getAllSortedByFavorite()
-    }
-    fun deleteAllRecords() {
-        this.audioDao.deleteAll(this.getAllRecords())
     }
 }
