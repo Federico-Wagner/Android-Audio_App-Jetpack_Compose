@@ -42,6 +42,7 @@ fun MainScreen( soundsDBx: List<Audio>,
                 groups: List<Group>,
                 navigateToNewAudio: () -> Unit,
                 navigateToAudioDetail: () -> Unit,
+                search: () -> Unit,
                 context: Context,
                 modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }
@@ -62,7 +63,7 @@ fun MainScreen( soundsDBx: List<Audio>,
                     Icons.Sharp.Search,
                     contentDescription = "search",
                     modifier = modifier
-                        .clickable { }
+                        .clickable { search() }
                         .size(60.dp)
                         .padding(start = 30.dp, top = 15.dp)
                 )

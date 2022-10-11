@@ -33,7 +33,8 @@ enum class AppScreen(@StringRes val title: Int) {
     Start(title = R.string.mainScreen),
     Select(title = R.string.selectAudio),
     Record(title = R.string.recordAudio),
-    Details(title = R.string.audioDetails)
+    Details(title = R.string.audioDetails),
+    GroupManager(title = R.string.groupManager)
 }
 
 /**
@@ -101,13 +102,9 @@ fun AudioAppScreen(
         ) {
             composable(route = AppScreen.Start.name) {
                 MainScreen(
-//                    DataBase.getAllRecords(),
                     DataBase.getAllRecords(),
                     DataBase.getAllGroups(),
                     navigateToNewAudio = {
-                        DataBase.showGroupsRecords()
-                        DataBase.showAudioRecords()
-
                         MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Select.name)
                     },
@@ -115,6 +112,7 @@ fun AudioAppScreen(
                         MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Details.name)
                     },
+                    search = { navController.navigate(AppScreen.GroupManager.name) },
                     context
                 )
             }
@@ -135,7 +133,6 @@ fun AudioAppScreen(
                     },
                     context)
             }
-
             composable(route = AppScreen.Details.name) {
                 editAudioObjectStatus.selectedAudio?.let { selectedAudio ->
                     EditAudio(
@@ -160,6 +157,9 @@ fun AudioAppScreen(
                         },
                         context)
                 }
+            }
+            composable(route = AppScreen.GroupManager.name) {
+                GroupManager()
             }
         }
     }

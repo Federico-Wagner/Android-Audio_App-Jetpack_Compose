@@ -28,13 +28,34 @@ object DataBase {
         this.groupDao = _db.groupDAO()
     }
 
-    fun groupCreate(newGroupName : String){
-        val newGroup = Group(0, newGroupName)
+    fun groupCreate(newGroupName : String, editable: Boolean){
+        val newGroup = Group(0, newGroupName, editable)
         this.groupDao.insert(newGroup)
+    }
+    fun groupCreateSAFE(newGroupName : String) : Boolean{
+        return if (this.groupDao.getGroupByName(newGroupName) == null){
+            //GROUP DOES NOT EXIST
+            groupCreate(newGroupName,true)
+            true
+        }else {
+            false
+        }
     }
     fun getAllGroups(): List<Group> {
         return this.groupDao.getAll()
     }
+
+    fun deleteGroupByEntitySAFE(group: Group): Boolean {
+        return if( group.isEditable ){                     // GROUP IS EDITABLE
+            this.groupDao.deleteByEntity(group)
+            true
+        }else {
+            false
+        }
+    }
+
+
+
 
     fun insertInDB( audioUserName: String,
                     audioFileName: String,
