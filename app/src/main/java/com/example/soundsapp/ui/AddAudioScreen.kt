@@ -109,13 +109,12 @@ fun AddAudioScreen(groups: List<Group>,
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
-//    val getGroupName =  fun(): String{
-//        val group = groups[0]
-//        return group.groupName
-//    }
-//    mSelectedText = getGroupName()
-//    mSelectedText = groups[0].groupName
-    mSelectedText = ""
+    val getGroupName =  fun(): String{
+        val group = groups.find { it.groupId == addNewAudioScreenObjectStatus.groupId }
+        return group!!.groupName
+    }
+    mSelectedText = getGroupName()
+
 
     val onFinish = fun(){
         playerState = MediaPlayerFW.state
@@ -229,7 +228,7 @@ fun AddAudioScreen(groups: List<Group>,
                 groups.forEach { group ->
                     DropdownMenuItem(onClick = {
                         mSelectedText = group.groupName
-                        editAudioObjectStatus.selectedAudio!!.groupId = group.groupId
+                        addNewAudioScreenObjectStatus.groupId = group.groupId
                         mExpanded = false
                     }) {
                         Text(text = group.groupName)
