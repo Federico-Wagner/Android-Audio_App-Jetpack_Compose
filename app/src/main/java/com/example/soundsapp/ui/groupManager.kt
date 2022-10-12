@@ -23,6 +23,10 @@ fun GroupManager(){
 
     var screenState by remember { mutableStateOf(GroupManagerState.HOME) }
 
+    val goBack = fun(){
+        screenState = GroupManagerState.HOME
+    }
+
     Column(){
         Row(){
             Button(onClick = { screenState = GroupManagerState.CREATE }) {
@@ -38,9 +42,9 @@ fun GroupManager(){
 
         when (screenState){
             GroupManagerState.HOME -> { GroupManagerHOME() }
-            GroupManagerState.CREATE -> { GroupManagerCREATE() }
-            GroupManagerState.EDIT -> { GroupManagerEDIT() }
-            GroupManagerState.DELETE -> { GroupManagerDELETE() }
+            GroupManagerState.CREATE -> { GroupManagerCREATE(goBack) }
+            GroupManagerState.EDIT -> { GroupManagerEDIT(goBack) }
+            GroupManagerState.DELETE -> { GroupManagerDELETE(goBack) }
         }
     }
 }
@@ -50,7 +54,7 @@ fun GroupManagerHOME(modifier: Modifier = Modifier){
     Text(text = "In this section you will be able to\n Create, Update & Delete audio groups")
 }
 @Composable
-fun GroupManagerCREATE(modifier: Modifier = Modifier){
+fun GroupManagerCREATE(goBack: () -> Unit, modifier: Modifier = Modifier){
 //    Text(text = "CREATE PAGE")
     var groupName by remember { mutableStateOf("") }
 
@@ -66,10 +70,14 @@ fun GroupManagerCREATE(modifier: Modifier = Modifier){
             label = { Text("New Group Name") }
         )
         Row() {
-            Button(onClick = { }) {
+            Button(onClick = { goBack() }) {
                 Text(text = "Go back")
             }
-            Button(onClick = { DataBase.groupCreateSAFE(groupName) }) {
+            Button(onClick = {
+                if(DataBase.groupCreateSAFE(groupName)){
+                    goBack()
+                }},
+                enabled = (groupName != "")) {
                 Text(text = "Save")
             }
         }
@@ -77,12 +85,79 @@ fun GroupManagerCREATE(modifier: Modifier = Modifier){
 
 }
 @Composable
-fun GroupManagerEDIT(modifier: Modifier = Modifier){
+fun GroupManagerEDIT(goBack: () -> Unit, modifier: Modifier = Modifier){
     Text(text = "EDIT PAGE")
+    val groups = DataBase.getAllGroups()
+    // Declaring a boolean value to store
+    // the expanded state of the Text Field
+    var mExpanded by remember { mutableStateOf(false) }
+    // Create a string value to store the selected city
+    var mSelectedGroup by remember { mutableStateOf(groups[0]) }
+    var newGroupName by remember { mutableStateOf("") }
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
+    //GROUP
+    Column() {
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            OutlinedTextField(
+                modifier = modifier
+                    .width(280.dp)
+                    .padding(end = 20.dp),
+                value = mSelectedGroup.groupName,
+                onValueChange = { },
+                label = { Text("Group Name") },
+                trailingIcon = {
+                    Icon(icon, "contentDescription",
+                        Modifier.clickable { mExpanded = !mExpanded })
+                }
+            )
+            DropdownMenu(
+                expanded = mExpanded,
+                onDismissRequest = { mExpanded = false },
+                modifier = Modifier
+            ) {
+                groups.forEach { group ->
+                    DropdownMenuItem(onClick = {
+                        mSelectedGroup = group
+                        mExpanded = false
+                    }) {
+                        Text(text = group.groupName)
+                    }
+                }
+            }
+        }
+        OutlinedTextField(
+            modifier = modifier
+                .width(280.dp)
+                .padding(end = 20.dp),
+            value = newGroupName,
+            onValueChange = { newGroupName = it },
+            label = { Text("New Group Name") },
+        )
+
+        Row() {
+            Button(onClick = { goBack() }) {
+                Text(text = "Go back")
+            }
+            Button(onClick = {
+                if(DataBase.updateByEntitySAFE(mSelectedGroup, newGroupName)){
+                    goBack()
+                }},
+            enabled = (newGroupName != "" && newGroupName != mSelectedGroup.groupName)) {
+                Text(text = "Save")
+            }
+        }
+    }
 }
 @Composable
-fun GroupManagerDELETE(modifier: Modifier = Modifier){
-//    Text(text = "DELETE PAGE")
+fun GroupManagerDELETE(goBack: () -> Unit, modifier: Modifier = Modifier){
     val groups = DataBase.getAllGroups()
     // Declaring a boolean value to store
     // the expanded state of the Text Field
@@ -130,10 +205,13 @@ fun GroupManagerDELETE(modifier: Modifier = Modifier){
         }
 
         Row() {
-            Button(onClick = { }) {
+            Button(onClick = { goBack() }) {
                 Text(text = "Go back")
             }
-            Button(onClick = { DataBase.deleteGroupByEntitySAFE(mSelectedGroup) }) {
+            Button(onClick = {
+                if(DataBase.deleteGroupByEntitySAFE(mSelectedGroup)){
+                    goBack()
+            } }) {
                 Text(text = "Delete")
             }
         }

@@ -1,6 +1,7 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -13,15 +14,18 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soundsapp.R
@@ -61,6 +65,7 @@ fun EditAudio(audio : Audio,
               discardBTN: () -> Unit,
               saveBTN: (Audio) -> Unit,
               deleteBTN: (Audio) -> Unit,
+              navigateToGroupManagerScreen: () -> Unit,
               context: Context,
               modifier: Modifier = Modifier
 ){
@@ -82,6 +87,7 @@ fun EditAudio(audio : Audio,
             discardBTN,
             saveBTN,
             deleteBTN,
+            navigateToGroupManagerScreen,
             context)
     }
 }
@@ -92,6 +98,7 @@ fun EditAudioLayOut(audio : Audio,
                     discardBTN: () -> Unit,
                     saveBTN: (Audio) -> Unit,
                     deleteBTN: (Audio) -> Unit,
+                    navigateToGroupManagerScreen: () -> Unit,
                     context: Context,
                     modifier: Modifier = Modifier
 )
@@ -218,8 +225,8 @@ fun EditAudioLayOut(audio : Audio,
         ){
             OutlinedTextField(
                 modifier = modifier
-                    .width(280.dp)
-                    .padding(end = 20.dp),
+                    .width(250.dp)
+                    .padding(end = 0.dp),
                 value =  mSelectedText,
                 onValueChange = { },
                 label = { Text("Audio group") },
@@ -243,6 +250,18 @@ fun EditAudioLayOut(audio : Audio,
                     }
                 }
             }
+            Spacer(modifier = modifier.padding(5.dp))
+
+            Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .padding(5.dp)
+                    .border(width = 1.dp, color= Green200, shape = RoundedCornerShape(40))
+                    .clickable { navigateToGroupManagerScreen() }
+                    .padding(3.dp),
+                textAlign = TextAlign.Center
+            )
         }
         Spacer(modifier = modifier.padding(8.dp))
         PlayerControls( onTap, update, playerState, context, modifier = modifier)

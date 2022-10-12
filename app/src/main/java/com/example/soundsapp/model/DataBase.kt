@@ -49,9 +49,9 @@ object DataBase {
         return this.groupDao.getAll()
     }
     //UPDATE
-    fun updateByEntity(group: Group, newGroupName: String): Boolean{
+    fun updateByEntitySAFE(group: Group, newGroupName: String): Boolean{
         //check if newName does not exist in DB
-        return if(this.groupDao.getGroupByName(newGroupName) != null){
+        return if(group.isEditable && this.groupDao.getGroupByName(newGroupName) == null){
             group.groupName = newGroupName
             this.groupDao.updateByEntity(group)
             true
@@ -62,9 +62,7 @@ object DataBase {
     //DELETE
     fun deleteGroupByEntitySAFE(group: Group): Boolean {
         return if( group.isEditable ){                     // GROUP IS EDITABLE
-            //generate safe deletion for this group
             var audiosInThisGroup : List<Audio> = this.getAllRecordsInGroup(group)
-
             fun changeToGeneralGroup(audio: Audio): Audio{
                 audio.groupId = 1 //"General" GroupID
                 return audio

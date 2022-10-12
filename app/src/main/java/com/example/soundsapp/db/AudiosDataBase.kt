@@ -8,7 +8,7 @@ import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.db.entity.Group
 
 
-@Database(entities = [Audio::class, Group::class], version = 21)
+@Database(entities = [Audio::class, Group::class], version = 22)
 abstract class AudiosDataBase : RoomDatabase() {
     abstract fun audioDAO(): AudioDAO
     abstract fun groupDAO(): GroupDAO

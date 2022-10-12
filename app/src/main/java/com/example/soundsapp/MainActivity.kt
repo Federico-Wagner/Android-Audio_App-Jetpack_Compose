@@ -67,18 +67,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate Called")
-
+        //WARMUP
         DataBase.createDB(applicationContext)
-
-        if(DataBase.getAllGroups().size == 0){ //TODO use next ID check if it works
+        if(DataBase.getAllGroups().size == 0){
             DataBase.groupCreate("General", false)
-            DataBase.groupCreate("GRP-TEST-1", false)
-            DataBase.groupCreate("GRP-TEST-2", false)
         }
-
-        DataBase.showGroupsRecords()
-
 
         setContent {
             SoundsAppTheme(darkTheme = true) {

@@ -155,6 +155,11 @@ fun AudioAppScreen(
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
                         },
+                        navigateToGroupManagerScreen = {
+                            editAudioObjectStatus.reset()
+                            MediaPlayerFW.reset()
+                            navController.navigate(AppScreen.GroupManager.name)
+                        },
                         context)
                 }
             }

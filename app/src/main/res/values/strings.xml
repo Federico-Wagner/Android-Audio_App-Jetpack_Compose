@@ -6,6 +6,7 @@
     <string name="discard">Go back</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="newG">New!</string>
 
     <string name="mainScreen">Main Screen</string>
     <string name="selectAudio">Select Audio</string>
