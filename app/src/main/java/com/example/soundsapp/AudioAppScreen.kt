@@ -117,7 +117,13 @@ fun AudioAppScreen(
                 )
             }
             composable(route = AppScreen.Select.name) {
-                SelectAudio(audioSearchBTN,
+                SelectAudio(
+                    DataBase.getAllGroups(),
+                    navigateToGroupManagerScreen = {
+                        MediaPlayerFW.reset()
+                        navController.navigate(AppScreen.GroupManager.name)
+                    },
+                    audioSearchBTN,
                     discardBTN = {
                         addNewAudioScreenObjectStatus.reset()
                         MediaPlayerFW.reset()

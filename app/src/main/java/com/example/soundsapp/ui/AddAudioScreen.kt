@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.AttachFile
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,11 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.*
 
@@ -55,7 +59,9 @@ object addNewAudioScreenObjectStatus{
 
 
 @Composable
-fun SelectAudio(audioSearchBTN: () -> Unit,
+fun SelectAudio(groups: List<Group>,
+                navigateToGroupManagerScreen: () -> Unit,
+                audioSearchBTN: () -> Unit,
                 discardBTN: () -> Unit,
                 saveBTN: (String) -> Unit,
                 context: Context,
@@ -67,10 +73,12 @@ fun SelectAudio(audioSearchBTN: () -> Unit,
             .padding(horizontal = 8.dp, vertical = 12.dp)
             .background(Black900, RoundedCornerShape(10.dp))
             .border(1.dp, color = Color.Black, RoundedCornerShape(10.dp))
-            .clickable(enabled = false) {  }
+            .clickable(enabled = false) { }
 
     ) {
         AddAudioScreen(
+            groups,
+            navigateToGroupManagerScreen,
             audioSearchBTN,
             discardBTN,
             saveBTN,
@@ -79,7 +87,9 @@ fun SelectAudio(audioSearchBTN: () -> Unit,
 }
 
 @Composable
-fun AddAudioScreen(audioSearchBTN: () -> Unit,
+fun AddAudioScreen(groups: List<Group>,
+                   navigateToGroupManagerScreen: () -> Unit,
+                   audioSearchBTN: () -> Unit,
                    discardBTN: () -> Unit,
                    saveBTN: (String) -> Unit,
                    context: Context,
@@ -89,6 +99,23 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
     var audioName by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioUserName) }
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
     var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
+
+    // Declaring a boolean value to store
+    // the expanded state of the Text Field
+    var mExpanded by remember { mutableStateOf(false) }
+    // Create a string value to store the selected city
+    var mSelectedText by remember { mutableStateOf("") }
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+//    val getGroupName =  fun(): String{
+//        val group = groups[0]
+//        return group.groupName
+//    }
+//    mSelectedText = getGroupName()
+//    mSelectedText = groups[0].groupName
+    mSelectedText = ""
 
     val onFinish = fun(){
         playerState = MediaPlayerFW.state
@@ -142,7 +169,9 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             verticalAlignment = Alignment.CenterVertically,
         ){
             OutlinedTextField(
-                modifier = modifier.width(260.dp).padding(end = 20.dp),
+                modifier = modifier
+                    .width(260.dp)
+                    .padding(end = 20.dp),
                 value =  audioFile,
                 onValueChange = {
                                     //no action due to readonly ppt - never reached
@@ -154,34 +183,83 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
             //SEARCH AUDIO BUTTON
             Box(modifier = modifier
                 .clip(RoundedCornerShape(30))
-                .padding( top = 5.dp),
+                .padding(top = 5.dp),
                 contentAlignment = Alignment.Center
             ){
                 Icon(Icons.Rounded.AttachFile,
                     contentDescription = "Search Audio",
                     modifier = modifier
                         .clickable {
-                            if(MediaPlayerFW.player.isPlaying){ MediaPlayerFW.stop() }
+                            if (MediaPlayerFW.player.isPlaying) {
+                                MediaPlayerFW.stop()
+                            }
                             audioSearchBTN()
                             audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
                             update()
                             playerState = MediaPlayerFW.PlayerState.STOP
                         }
-                        .size(45.dp,55.dp)
+                        .size(45.dp, 55.dp)
                         .padding(6.dp)
                         .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
                 )
             }
         }
+        //GROUP
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ){
+            OutlinedTextField(
+                modifier = modifier
+                    .width(240.dp),
+                value =  mSelectedText,
+                onValueChange = { },
+                label = { Text("Audio group") },
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { mExpanded = !mExpanded })
+                }
+            )
+            DropdownMenu(
+                expanded = mExpanded,
+                onDismissRequest = { mExpanded = false },
+                modifier = Modifier
+            ) {
+                groups.forEach { group ->
+                    DropdownMenuItem(onClick = {
+                        mSelectedText = group.groupName
+                        editAudioObjectStatus.selectedAudio!!.groupId = group.groupId
+                        mExpanded = false
+                    }) {
+                        Text(text = group.groupName)
+                    }
+                }
+            }
+            Spacer(modifier = modifier.padding(5.dp))
+            //NEW! BTN
+            Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .padding(5.dp)
+                    .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(40))
+                    .clickable { navigateToGroupManagerScreen() }
+                    .padding(3.dp),
+                textAlign = TextAlign.Center
+            )
+        }
 
+        Spacer(modifier = modifier.padding(7.dp))
         PlayerControls( onTap, update, playerState, context, modifier = modifier)
+        Spacer(modifier = modifier.padding(7.dp))
 
         Row(modifier = modifier
             .fillMaxWidth()
             ,horizontalArrangement = Arrangement.SpaceEvenly
         ){
             Button(
-                modifier = modifier.padding(top = 15.dp),
+                modifier = modifier,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                 shape = RoundedCornerShape(40),
                 onClick = { discardBTN() }
@@ -189,7 +267,7 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 Text(text = stringResource( R.string.discard), color = Black900, fontSize = 17.sp)
             }
             Button(
-                modifier = modifier.padding(top = 15.dp),
+                modifier = modifier,
                 colors = ButtonDefaults.buttonColors(backgroundColor = saveBtnColor),
                 shape = RoundedCornerShape(40),
                 onClick = { saveBTN(audioName) }
@@ -197,5 +275,6 @@ fun AddAudioScreen(audioSearchBTN: () -> Unit,
                 Text(text = stringResource( R.string.save), color = Black900, fontSize = 17.sp)
             }
         }
+        Spacer(modifier = modifier.padding(8.dp))
     }
 }
