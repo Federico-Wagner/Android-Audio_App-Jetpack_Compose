@@ -3,9 +3,7 @@ package com.example.soundsapp.ui
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,9 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.Group
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soundsapp.ui.theme.Green200
@@ -35,17 +39,21 @@ import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.theme.Black900
 import com.example.soundsapp.ui.theme.Gold600
 import com.example.soundsapp.ui.theme.Purple700
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 
 
 @Composable
 fun MainScreen( soundsDBx: List<Audio>,
-                groups: List<Group>,
+                groupsDBx: List<Group>,
                 navigateToNewAudio: () -> Unit,
                 navigateToAudioDetail: () -> Unit,
                 search: () -> Unit,
                 context: Context,
                 modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }
+    val groupsDB by remember { mutableStateOf(groupsDBx) }
 
     Scaffold(
         modifier = modifier.fillMaxWidth(),
@@ -70,7 +78,10 @@ fun MainScreen( soundsDBx: List<Audio>,
             }
         },
         bottomBar = {
-            Column(modifier.fillMaxWidth().background(color = Color.Black)){
+            Column(
+                modifier
+                    .fillMaxWidth()
+                    .background(color = Color.Black)){
                 Spacer(modifier = modifier.padding(5.dp))
                 Row( modifier = modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround,
@@ -88,18 +99,42 @@ fun MainScreen( soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB,navigateToAudioDetail, context)
+            SoundsList(soundsDB,groupsDB,navigateToAudioDetail, context)
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun SoundsList(soundsDB: List<Audio>,
+               groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
                context: Context) {
-    LazyVerticalGrid(cells = GridCells.Fixed(2)){
-        items(soundsDB){audio -> SoundCardDB(audio,navigateToAudioDetail, context)}
+
+    LazyVerticalGrid(cells = GridCells.Fixed(1)){
+        items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context)}
+    }
+}
+
+@Composable
+fun GroupView(  group: Group,
+                navigateToAudioDetail: () -> Unit,
+                context: Context,
+                modifier: Modifier = Modifier){
+    var audiosInThisGroup: List<Audio> = DataBase.getAllRecordsInGroup(group)
+
+    Column {
+        if(audiosInThisGroup.isNotEmpty()){
+            Row {
+                Spacer(modifier = modifier.padding(10.dp))
+                Text(text = group.groupName + "  " + audiosInThisGroup.size.toString(), color = Color.Gray, fontSize = 23.sp)
+            }
+            FlowRow {
+                for (audio in audiosInThisGroup) {
+                    SoundCardDB(audio, navigateToAudioDetail, context)
+                }
+            }
+        }
     }
 }
 
@@ -120,16 +155,18 @@ fun SoundCardDB( audio: Audio,
 
     //FAVORITE BORDER
     val favNoramlModifier: Modifier = when(audio.favorite){
-        true -> { Modifier
-            .padding(8.dp)
-            .height(60.dp)
-            .border(1.dp, color = Gold600, shape = RoundedCornerShape(30))
-            .clip(RoundedCornerShape(30))
+        true -> {
+            Modifier
+                .padding(8.dp)
+                .height(60.dp)
+                .border(1.dp, color = Gold600, shape = RoundedCornerShape(30))
+                .clip(RoundedCornerShape(30))
              }
-        false -> { Modifier
-            .padding(8.dp)
-            .height(60.dp)
-            .clip(RoundedCornerShape(30)) }
+        false -> {
+            Modifier
+                .padding(8.dp)
+                .height(60.dp)
+                .clip(RoundedCornerShape(30)) }
     }
 
     Card(modifier = favNoramlModifier,
