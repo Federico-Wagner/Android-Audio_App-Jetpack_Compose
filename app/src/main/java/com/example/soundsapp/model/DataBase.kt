@@ -2,6 +2,7 @@ package com.example.soundsapp.model
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.ui.text.capitalize
 import androidx.room.Room
 import androidx.room.Update
 import com.example.soundsapp.db.AudiosDataBase
@@ -32,7 +33,7 @@ object DataBase {
     //GROUPS
     //CREATE
     fun groupCreate(newGroupName : String, editable: Boolean){
-        val newGroup = Group(0, newGroupName, editable)
+        val newGroup = Group(0, newGroupName.replaceFirstChar { it.uppercase() }, editable)
         this.groupDao.insert(newGroup)
     }
     fun groupCreateSAFE(newGroupName : String) : Boolean{

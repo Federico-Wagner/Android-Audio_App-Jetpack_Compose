@@ -9,9 +9,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.PlayArrow
-import androidx.compose.material.icons.rounded.Share
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.Group
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.VectorGroup
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
@@ -121,17 +123,39 @@ fun GroupView(  group: Group,
                 navigateToAudioDetail: () -> Unit,
                 context: Context,
                 modifier: Modifier = Modifier){
-    var audiosInThisGroup: List<Audio> = DataBase.getAllRecordsInGroup(group)
+    val audiosInThisGroup: List<Audio> = DataBase.getAllRecordsInGroup(group)
+    var showGroup by remember { mutableStateOf(true) }
+    var icon by remember { mutableStateOf(Icons.Filled.KeyboardArrowDown) }
+
+    fun getIcon(): ImageVector {
+        return if(showGroup) {
+            Icons.Filled.KeyboardArrowDown
+        }else{
+            Icons.Filled.KeyboardArrowUp
+        }
+    }
+
+    val showHideGroup = fun(){
+        showGroup = !showGroup
+        icon = getIcon()
+    }
 
     Column {
-        if(audiosInThisGroup.isNotEmpty()){
-            Row {
+        if( audiosInThisGroup.isNotEmpty() ){
+            Row(modifier = modifier.clickable { showHideGroup() }) {
                 Spacer(modifier = modifier.padding(10.dp))
-                Text(text = group.groupName + "  " + audiosInThisGroup.size.toString(), color = Color.Gray, fontSize = 23.sp)
+                Text(text = group.groupName, color = Color.Gray, fontSize = 23.sp)
+                Spacer(modifier = modifier.padding(2.dp))
+                Text(text = "(" + audiosInThisGroup.size.toString() + ")",
+                    color = Color.Gray, fontSize = 10.sp, modifier = modifier.padding(top = 12.dp))
+                Spacer(modifier = modifier.padding(2.dp))
+                Icon(icon,"showHideArrow", modifier = modifier.size(35.dp), tint = Color.Gray)
             }
-            FlowRow {
-                for (audio in audiosInThisGroup) {
-                    SoundCardDB(audio, navigateToAudioDetail, context)
+            if(showGroup){
+                FlowRow {
+                    for (audio in audiosInThisGroup) {
+                        SoundCardDB(audio, navigateToAudioDetail, context)
+                    }
                 }
             }
         }
