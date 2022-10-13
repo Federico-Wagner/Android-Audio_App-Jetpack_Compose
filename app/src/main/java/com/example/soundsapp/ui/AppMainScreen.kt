@@ -138,6 +138,9 @@ fun GroupView(  group: Group,
     val showHideGroup = fun(){
         showGroup = !showGroup
         icon = getIcon()
+        if(MediaPlayerFW.currentAudiogroupID == group.groupId) {
+            MediaPlayerFW.reset()
+        }
     }
 
     Column {

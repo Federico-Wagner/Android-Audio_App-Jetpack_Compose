@@ -18,6 +18,7 @@ object MediaPlayerFW {
     var player: MediaPlayer = MediaPlayer()
     var state: PlayerState = PlayerState.STOP
     var currentAudioUri: String? = null
+    var currentAudiogroupID: Long? = null
     var onFinishX: (() -> Unit?)? = null
 
     enum class PlayerState {
@@ -39,6 +40,7 @@ object MediaPlayerFW {
                 this.onFinishX?.let { it() }
             }
             this.currentAudioUri = audio.audioURI
+            this.currentAudiogroupID = audio.groupId
             this.setAndPlay(context, audio, onFinish)
         }
     }
@@ -90,6 +92,7 @@ object MediaPlayerFW {
         this.player.reset()
         this.state = PlayerState.STOP
         this.currentAudioUri = null
+        this.currentAudiogroupID = null
     }
 
     //UI

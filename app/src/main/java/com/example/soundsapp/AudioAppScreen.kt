@@ -175,34 +175,3 @@ fun AudioAppScreen(
         }
     }
 }
-
-
-
-///**
-// * Resets the [OrderUiState] and pops up to [CupcakeScreen.Start]
-// */
-//private fun cancelOrderAndNavigateToStart(
-//    viewModel: OrderViewModel,
-//    navController: NavHostController
-//) {
-//    viewModel.resetOrder()
-//    navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
-//}
-//
-///**
-// * Creates an intent to share order details
-// */
-//private fun shareOrder(context: Context, subject: String, summary: String) {
-//    // Create an ACTION_SEND implicit intent with order details in the intent extras
-//    val intent = Intent(Intent.ACTION_SEND).apply {
-//        type = "text/plain"
-//        putExtra(Intent.EXTRA_SUBJECT, subject)
-//        putExtra(Intent.EXTRA_TEXT, summary)
-//    }
-//    context.startActivity(
-//        Intent.createChooser(
-//            intent,
-//            context.getString(R.string.new_cupcake_order)
-//        )
-//    )
-//}
