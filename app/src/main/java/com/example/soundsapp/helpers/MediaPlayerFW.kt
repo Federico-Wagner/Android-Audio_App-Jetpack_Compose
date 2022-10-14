@@ -1,14 +1,21 @@
 package com.example.soundsapp.helpers
 
+import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
+import android.database.Cursor
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.FileProvider
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -70,6 +77,7 @@ object MediaPlayerFW {
             }catch (e: Exception){
                 logger.log(Level.SEVERE,e.toString())
                 println(e)
+                MediaPlayerFW.reset()
             }
         }
     }

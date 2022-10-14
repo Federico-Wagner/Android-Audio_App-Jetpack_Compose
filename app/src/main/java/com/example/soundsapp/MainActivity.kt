@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,17 +14,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import com.example.soundsapp.db.DAO.GroupDAO
-import com.example.soundsapp.db.entity.Audio
-import com.example.soundsapp.db.entity.Group
-import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 
 class MainActivity : ComponentActivity() {
-    private val TAG = "MainActivity"
 
     val audioSearchBTN = fun() {
         val intent = Intent()
@@ -64,7 +58,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //WARMUP
@@ -72,6 +65,28 @@ class MainActivity : ComponentActivity() {
         if(DataBase.getAllGroups().size == 0){
             DataBase.groupCreate("General", false)
         }
+
+
+        DataBase.showAllAudioRecords()
+        DataBase.showAllGroupsRecords()
+
+//        DataBase.deleteAllRecords()
+
+
+
+        DataBase.getAllRecords().forEach{
+            try {
+                grantUriPermission(
+                    packageName,
+                    Uri.parse(it.audioURI),
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+            }catch (e: Exception){
+                println(e)
+            }
+        }
+
+
 
         setContent {
             SoundsAppTheme(darkTheme = true) {

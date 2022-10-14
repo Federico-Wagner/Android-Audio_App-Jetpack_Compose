@@ -2,6 +2,7 @@ package com.example.soundsapp
 
 
 import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -88,7 +89,8 @@ fun AudioAppScreen(
                     MediaPlayerFW.reset()
                     addNewAudioScreenObjectStatus.reset()
                     editAudioObjectStatus.reset()
-                    navController.navigateUp()
+//                    navController.navigateUp()
+                    navController.popBackStack()
                 }
             )
         }
@@ -127,6 +129,7 @@ fun AudioAppScreen(
                     discardBTN = {
                         addNewAudioScreenObjectStatus.reset()
                         MediaPlayerFW.reset()
+                        navController.popBackStack()
                         navController.navigate(AppScreen.Start.name)
                     },
                     saveBTN = {
@@ -135,6 +138,10 @@ fun AudioAppScreen(
                             addNewAudioScreenObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
+                            val text = "Audio saved"
+                            val duration = Toast.LENGTH_SHORT
+                            val toast = Toast.makeText(context, text, duration)
+                            toast.show()
                         }
                     },
                     context)
@@ -154,12 +161,20 @@ fun AudioAppScreen(
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
+                            val text = "Audio updated"
+                            val duration = Toast.LENGTH_SHORT
+                            val toast = Toast.makeText(context, text, duration)
+                            toast.show()
                         },
                         deleteBTN = {
                             DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!)
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
+                            val text = "Audio deleted"
+                            val duration = Toast.LENGTH_SHORT
+                            val toast = Toast.makeText(context, text, duration)
+                            toast.show()
                         },
                         navigateToGroupManagerScreen = {
                             editAudioObjectStatus.reset()

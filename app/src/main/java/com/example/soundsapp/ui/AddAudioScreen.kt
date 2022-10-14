@@ -130,7 +130,7 @@ fun AddAudioScreen(groups: List<Group>,
                 addNewAudioScreenObjectStatus.selectedAudioUri.toString(),
                 addNewAudioScreenObjectStatus.selectedAudioPath.toString(),
                 addNewAudioScreenObjectStatus.favorite,
-                1 //GENERAL GROUP
+                addNewAudioScreenObjectStatus.groupId
             ),
             onFinish)
         update()

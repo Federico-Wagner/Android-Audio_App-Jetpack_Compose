@@ -88,8 +88,9 @@ object DataBase {
                     audioURI: Uri?,
                     audioPath: String?,
                     favorite: Boolean,
-                    groupId: Long?) {  //TODO remove nullleable value
-        val newAudio = Audio(0,
+                    groupId: Long?) {
+        val newAudio = Audio(
+            0,
             audioUserName,
             audioFileName,
             audioURI.toString(),
@@ -145,7 +146,7 @@ object DataBase {
     }
 
 
-    fun showAudioRecords() {
+    fun showAllAudioRecords() {
         println("audios:  TRY")
         val audios: Map<Audio, Group> = this.audioDao.loadAudiosWithGroupsAndSortedByFavorite()
         audios.forEach {
@@ -163,7 +164,7 @@ object DataBase {
             )
         }
     }
-    fun showGroupsRecords() {
+    fun showAllGroupsRecords() {
         println("grops:")
         val groups: List<Group> = this.groupDao.getAll()
         groups.forEach {

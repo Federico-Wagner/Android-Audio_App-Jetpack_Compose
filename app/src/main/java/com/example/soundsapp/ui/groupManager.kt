@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.soundsapp.model.DataBase
@@ -76,6 +78,10 @@ fun GroupManagerCREATE(goBack: () -> Unit, modifier: Modifier = Modifier){
             Button(onClick = {
                 if(DataBase.groupCreateSAFE(groupName)){
                     goBack()
+//                    val text = "Group created"
+//                    val duration = Toast.LENGTH_SHORT
+//                    val toast = Toast.makeText(context, text, duration)
+//                    toast.show()
                 }},
                 enabled = (groupName != "")) {
                 Text(text = "Save")
