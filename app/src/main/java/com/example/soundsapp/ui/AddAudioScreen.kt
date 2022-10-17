@@ -52,7 +52,6 @@ object addNewAudioScreenObjectStatus{
     fun isSavable(): Boolean {
         return( this.selectedAudioUri != null &&
                 this.selectedAudioUserName != "" &&
-                this.selectedAudioPath != null &&
                 this.selectedAudioFileName != "" )
     }
 }

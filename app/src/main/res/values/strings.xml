@@ -18,4 +18,12 @@
     <string name="generic">generic</string>
 
 
+<!--    TOAST MESSAGES-->
+    <string name="audioSaved">Audio saved</string>
+    <string name="audioDeleted">Audio deleted</string>
+    <string name="audioCreated">Audio created successfully</string>
+    <string name="audioEdit">Audio edited successfully</string>
+
+    <string name="audioError">Error: ${}</string>
+
 </resources>

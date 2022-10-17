@@ -1,6 +1,7 @@
 package com.example.soundsapp
 
 
+import android.content.ContentResolver
 import android.content.Context
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -22,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.*
@@ -69,6 +71,7 @@ fun NavigationAppBar(
 fun AudioAppScreen(
     audioSearchBTN: () -> Unit,
     context: Context,
+    contentResolver : ContentResolver,
     modifier : Modifier = Modifier,
 //    viewModel: OrderViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
@@ -115,8 +118,8 @@ fun AudioAppScreen(
                         navController.navigate(AppScreen.Details.name)
                     },
                     search = { navController.navigate(AppScreen.GroupManager.name) },
-                    context
-                )
+                    context,
+                    contentResolver )
             }
             composable(route = AppScreen.Select.name) {
                 SelectAudio(
@@ -134,14 +137,14 @@ fun AudioAppScreen(
                     },
                     saveBTN = {
                         if(addNewAudioScreenObjectStatus.isSavable()) {
-                            DataBase.saveAudioinDB(context)
-                            addNewAudioScreenObjectStatus.reset()
+                            //Copy file and Save Uri
+                            FileManger.onSave(  context,
+                                                addNewAudioScreenObjectStatus.selectedAudioUri!! ,
+                                                addNewAudioScreenObjectStatus.selectedAudioFileName,
+                                                contentResolver)
+                            //Reset MediaPlayerFW
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
-                            val text = "Audio saved"
-                            val duration = Toast.LENGTH_SHORT
-                            val toast = Toast.makeText(context, text, duration)
-                            toast.show()
                         }
                     },
                     context)
@@ -185,7 +188,7 @@ fun AudioAppScreen(
                 }
             }
             composable(route = AppScreen.GroupManager.name) {
-                GroupManager()
+                GroupManager(context)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.content.ContentResolver
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -53,6 +54,7 @@ fun MainScreen( soundsDBx: List<Audio>,
                 navigateToAudioDetail: () -> Unit,
                 search: () -> Unit,
                 context: Context,
+                contentResolver : ContentResolver,
                 modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }
     val groupsDB by remember { mutableStateOf(groupsDBx) }
@@ -101,7 +103,7 @@ fun MainScreen( soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB,groupsDB,navigateToAudioDetail, context)
+            SoundsList(soundsDB,groupsDB,navigateToAudioDetail, context, contentResolver)
         }
     }
 }
@@ -111,10 +113,11 @@ fun MainScreen( soundsDBx: List<Audio>,
 fun SoundsList(soundsDB: List<Audio>,
                groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
-               context: Context) {
+               context: Context,
+               contentResolver : ContentResolver) {
 
     LazyVerticalGrid(cells = GridCells.Fixed(1)){
-        items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context)}
+        items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context, contentResolver)}
     }
 }
 
@@ -122,6 +125,7 @@ fun SoundsList(soundsDB: List<Audio>,
 fun GroupView(  group: Group,
                 navigateToAudioDetail: () -> Unit,
                 context: Context,
+                contentResolver : ContentResolver,
                 modifier: Modifier = Modifier){
     val audiosInThisGroup: List<Audio> = DataBase.getAllRecordsInGroup(group)
     var showGroup by remember { mutableStateOf(true) }
@@ -157,7 +161,7 @@ fun GroupView(  group: Group,
             if(showGroup){
                 FlowRow {
                     for (audio in audiosInThisGroup) {
-                        SoundCardDB(audio, navigateToAudioDetail, context)
+                        SoundCardDB(audio, navigateToAudioDetail, context, contentResolver )
                     }
                 }
             }
@@ -169,6 +173,7 @@ fun GroupView(  group: Group,
 fun SoundCardDB( audio: Audio,
                  navigateToAudioDetail: () -> Unit,
                  context: Context,
+                 contentResolver : ContentResolver,
               modifier : Modifier = Modifier ) {
     var playPause by remember { mutableStateOf(Icons.Rounded.PlayArrow) }
 
@@ -220,7 +225,7 @@ fun SoundCardDB( audio: Audio,
                     contentDescription = "share",
                     modifier = modifier
                         .clickable {
-                            shareSound(context, audio)
+                            shareSound(context, audio, contentResolver)
                         }
                         .size(28.dp)
                         .padding(end = 5.dp)

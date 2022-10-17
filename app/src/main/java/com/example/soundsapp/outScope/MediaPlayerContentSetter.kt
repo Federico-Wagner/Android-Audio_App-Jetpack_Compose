@@ -1,18 +1,18 @@
 package com.example.soundsapp.outScope
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.database.Cursor
-import android.media.MediaPlayer
-import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
-import java.io.File
-import java.io.FileInputStream
+//import android.annotation.SuppressLint
+//import android.content.Context
+//import android.database.Cursor
+//import android.media.MediaPlayer
+//import android.net.Uri
+//import android.os.Build
+//import android.provider.MediaStore
+//import java.io.File
+//import java.io.FileInputStream
 
 
-class MediaPlayerContentSetter {
-}
+//class MediaPlayerContentSetter {
+//}
 //
 //
 //@Throws(Exception::class)

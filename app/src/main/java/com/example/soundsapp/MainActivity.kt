@@ -65,14 +65,10 @@ class MainActivity : ComponentActivity() {
         if(DataBase.getAllGroups().size == 0){
             DataBase.groupCreate("General", false)
         }
-
-
+        //DEBUG - DEVELOP
         DataBase.showAllAudioRecords()
         DataBase.showAllGroupsRecords()
-
 //        DataBase.deleteAllRecords()
-
-
 
         DataBase.getAllRecords().forEach{
             try {
@@ -86,16 +82,16 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-
+        contentResolver
 
         setContent {
             SoundsAppTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.secondary
+                    color = MaterialTheme.colors.background
                 ) {
-                    AudioAppScreen(audioSearchBTN, applicationContext)
+                    AudioAppScreen(audioSearchBTN, applicationContext, contentResolver)
                 }
             }
         }

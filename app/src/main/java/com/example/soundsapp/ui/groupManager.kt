@@ -1,5 +1,6 @@
 package com.example.soundsapp.ui
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.soundsapp.helpers.ToastHelper
 import com.example.soundsapp.model.DataBase
 
 enum class GroupManagerState {
@@ -21,7 +23,7 @@ enum class GroupManagerState {
 }
 
 @Composable
-fun GroupManager(){
+fun GroupManager(context: Context){
 
     var screenState by remember { mutableStateOf(GroupManagerState.HOME) }
 
@@ -43,20 +45,20 @@ fun GroupManager(){
         }
 
         when (screenState){
-            GroupManagerState.HOME -> { GroupManagerHOME() }
-            GroupManagerState.CREATE -> { GroupManagerCREATE(goBack) }
-            GroupManagerState.EDIT -> { GroupManagerEDIT(goBack) }
-            GroupManagerState.DELETE -> { GroupManagerDELETE(goBack) }
+            GroupManagerState.HOME -> { GroupManagerHOME(context) }
+            GroupManagerState.CREATE -> { GroupManagerCREATE(goBack, context) }
+            GroupManagerState.EDIT -> { GroupManagerEDIT(goBack, context) }
+            GroupManagerState.DELETE -> { GroupManagerDELETE(goBack, context) }
         }
     }
 }
 
 @Composable
-fun GroupManagerHOME(modifier: Modifier = Modifier){
+fun GroupManagerHOME(context: Context, modifier: Modifier = Modifier){
     Text(text = "In this section you will be able to\n Create, Update & Delete audio groups")
 }
 @Composable
-fun GroupManagerCREATE(goBack: () -> Unit, modifier: Modifier = Modifier){
+fun GroupManagerCREATE(goBack: () -> Unit, context: Context,  modifier: Modifier = Modifier){
 //    Text(text = "CREATE PAGE")
     var groupName by remember { mutableStateOf("") }
 
@@ -76,12 +78,8 @@ fun GroupManagerCREATE(goBack: () -> Unit, modifier: Modifier = Modifier){
                 Text(text = "Go back")
             }
             Button(onClick = {
-                if(DataBase.groupCreateSAFE(groupName)){
+                if(DataBase.groupCreateSAFE(groupName, context)){
                     goBack()
-//                    val text = "Group created"
-//                    val duration = Toast.LENGTH_SHORT
-//                    val toast = Toast.makeText(context, text, duration)
-//                    toast.show()
                 }},
                 enabled = (groupName != "")) {
                 Text(text = "Save")
@@ -91,7 +89,7 @@ fun GroupManagerCREATE(goBack: () -> Unit, modifier: Modifier = Modifier){
 
 }
 @Composable
-fun GroupManagerEDIT(goBack: () -> Unit, modifier: Modifier = Modifier){
+fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = Modifier){
     Text(text = "EDIT PAGE")
     val groups = DataBase.getAllGroups()
     // Declaring a boolean value to store
@@ -163,7 +161,7 @@ fun GroupManagerEDIT(goBack: () -> Unit, modifier: Modifier = Modifier){
     }
 }
 @Composable
-fun GroupManagerDELETE(goBack: () -> Unit, modifier: Modifier = Modifier){
+fun GroupManagerDELETE(goBack: () -> Unit, context: Context, modifier: Modifier = Modifier){
     val groups = DataBase.getAllGroups()
     // Declaring a boolean value to store
     // the expanded state of the Text Field

@@ -10,6 +10,7 @@ import com.example.soundsapp.db.DAO.AudioDAO
 import com.example.soundsapp.db.DAO.GroupDAO
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.db.entity.Group
+import com.example.soundsapp.helpers.ToastHelper
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 
 
@@ -36,10 +37,11 @@ object DataBase {
         val newGroup = Group(0, newGroupName.replaceFirstChar { it.uppercase() }, editable)
         this.groupDao.insert(newGroup)
     }
-    fun groupCreateSAFE(newGroupName : String) : Boolean{
+    fun groupCreateSAFE(newGroupName : String, context: Context) : Boolean{
         return if (this.groupDao.getGroupByName(newGroupName) == null){
             //GROUP DOES NOT EXIST
             groupCreate(newGroupName,true)
+            ToastHelper.sendToastMesage("Group created: $newGroupName", context)
             true
         }else {
             false
@@ -110,6 +112,13 @@ object DataBase {
             addNewAudioScreenObjectStatus.favorite,
             addNewAudioScreenObjectStatus.groupId
         )
+        //Clean addNewAudioScreenObjectStatus
+        addNewAudioScreenObjectStatus.reset()
+    }
+
+    fun saveAudioinDB(newAudio: Audio) {
+        //persist in DB
+        this.audioDao.insert(newAudio)
         //Clean addNewAudioScreenObjectStatus
         addNewAudioScreenObjectStatus.reset()
     }

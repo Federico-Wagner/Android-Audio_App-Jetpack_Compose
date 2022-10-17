@@ -14,18 +14,27 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.UnusedAppRestrictionsConstants
+import androidx.core.net.toUri
+import com.example.soundsapp.db.entity.Audio
+import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.helpers.ToastHelper
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.SelectAudio
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
+import java.io.*
+import java.time.Instant
+import java.util.*
 
 
 class UploadFromMemoryActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val audioUri: Uri? = intent.clipData?.getItemAt(0)?.uri
+        val originalAudioUri: Uri? = intent.clipData?.getItemAt(0)?.uri
 
         //Retrieving audio fileName
         val projection = arrayOf(
@@ -35,7 +44,7 @@ class UploadFromMemoryActivity : AppCompatActivity() {
             MediaStore.Audio.Media.SIZE,
         )
         val cursor: Cursor? =
-            contentResolver.query(audioUri!!, projection, null, null, null, null)
+            contentResolver.query(originalAudioUri!!, projection, null, null, null, null)
         try {
             if ((cursor != null) && cursor.moveToFirst()) {
                 val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
@@ -46,18 +55,10 @@ class UploadFromMemoryActivity : AppCompatActivity() {
         } finally {
             cursor?.close()
         }
-        addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
-        addNewAudioScreenObjectStatus.selectedAudioPath = "audio path new intent - TEST"
-
-
-
+        addNewAudioScreenObjectStatus.selectedAudioUri = originalAudioUri
 
 
         setContent {
-            // If inten was launched with "Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION" this line will take that flag -- (not working)
-            //LocalContext.current.contentResolver.takePersistableUriPermission(audioUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            // thows:  No persistable permission grants found for UID 10445 and Uri content://media/external/audio/media/64325 [user 0]
-
             val context = LocalContext.current
             SoundsAppTheme(darkTheme = true) {
                 Surface(
@@ -79,16 +80,14 @@ class UploadFromMemoryActivity : AppCompatActivity() {
                         },
                         saveBTN = {
                             if(addNewAudioScreenObjectStatus.isSavable()) {
-                                DataBase.saveAudioinDB(context)
-                                addNewAudioScreenObjectStatus.reset()
+                                //Copy file and Save Uri
+                                FileManger.onSave(  context,
+                                                    addNewAudioScreenObjectStatus.selectedAudioUri!! ,
+                                                    addNewAudioScreenObjectStatus.selectedAudioFileName,
+                                                    contentResolver)
+                                //Reset MediaPlayerFW
                                 MediaPlayerFW.reset()
-                                println("saving audio!!!")
-                                println(audioUri.toString())
-
-                                val text = "Audio saved"
-                                val duration = Toast.LENGTH_SHORT
-                                val toast = Toast.makeText(applicationContext, text, duration)
-                                toast.show()
+                                //End Activity
                                 finish()
                             }
                         },
