@@ -16,7 +16,7 @@ import java.io.OutputStream
 
 object FileManger {
 
-    fun onSave(context : Context ,audioUri : Uri, fileName : String ,r : ContentResolver ){
+    fun onSave(context : Context ,audioUri : Uri, fileName : String ,r : ContentResolver ): Boolean{
         try {
             val dir = mkdir(context, AUDIO_FILES_FOLDER_NAME)
             val copyToUri = File(dir, fileName).toUri()
@@ -34,13 +34,10 @@ object FileManger {
             DataBase.saveAudioinDB(newAudio)
             //Reset Object
             addNewAudioScreenObjectStatus.reset()
-            //Give Feedback to user
-            ToastHelper.sendToastMesage( R.string.audioSaved.toString(), context) //TODO check
-
+            return true
         }catch (e:Exception){
             println(e)
-            //Give Feedback to user
-            ToastHelper.sendToastMesage(R.string.audioError.toString(), context)  //TODO check
+            return false
         }
     }
 
