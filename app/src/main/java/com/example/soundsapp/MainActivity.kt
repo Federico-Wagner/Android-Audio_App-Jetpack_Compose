@@ -3,6 +3,7 @@ package com.example.soundsapp
 import android.app.Activity
 import android.content.Intent
 import android.database.Cursor
+import android.database.Observable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
@@ -41,6 +43,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+//    val audiosDataBase:  Observable<Audio> = Observable<Audio>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //WARMUP
@@ -53,7 +57,6 @@ class MainActivity : ComponentActivity() {
         DataBase.showAllGroupsRecords()
 //        DataBase.deleteAllRecords()
 
-
         setContent {
             SoundsAppTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
@@ -65,5 +68,12 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("MainActivity - onResume")
+
+
     }
 }

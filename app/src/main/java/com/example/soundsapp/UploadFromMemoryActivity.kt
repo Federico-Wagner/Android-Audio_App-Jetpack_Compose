@@ -39,9 +39,21 @@ class UploadFromMemoryActivity : AppCompatActivity() {
         addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(originalAudioUri,contentResolver)!!
 
 
+//        setContent {
+//            UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
+//        }
+
         setContent {
-            UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
+            SoundsAppTheme(darkTheme = true) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
+                }
+            }
         }
+
     }
 }
 
@@ -53,43 +65,39 @@ fun UploadFromMemoryActivityScreen(
     val audioSavedMsg = stringResource(R.string.audioSaved)
     val audioErrorMsg = stringResource(R.string.audioError)
     val context = LocalContext.current
-    SoundsAppTheme(darkTheme = true) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.secondary
-        ) {
-            SelectAudio(
-                DataBase.getAllGroups(),
-                navigateToGroupManagerScreen = {
+
+    SelectAudio(
+        DataBase.getAllGroups(),
+        navigateToGroupManagerScreen = {
 //                            MediaPlayerFW.reset()
 //                            navController.navigate(AppScreen.GroupManager.name)
-                },
-                audioSearchBTN = {},
-                discardBTN = {
+        },
+        audioSearchBTN = {},
+        discardBTN = {
 //                            addNewAudioScreenObjectStatus.reset()
 //                            MediaPlayerFW.reset()
 //                            navController.navigate(AppScreen.Start.name)
-                    finish()
-                },
-                saveBTN = {
-                    if(addNewAudioScreenObjectStatus.isSavable()) {
-                        //Copy file and Save Uri
-                        if(FileManger.onSave(  context,
-                                addNewAudioScreenObjectStatus.selectedAudioUri!! ,
-                                addNewAudioScreenObjectStatus.selectedAudioFileName,
-                                r)) {
-                                    ToastHelper.sendToastMesage( audioSavedMsg, context)
-                        }else{
-                                    ToastHelper.sendToastMesage( audioErrorMsg, context)
-                        }
-                        //Reset MediaPlayerFW
-                        MediaPlayerFW.reset()
-                        //End Activity
-                        finish()
-                    }
-                },
-                context)
-        }
-    }
+            finish()
+        },
+        saveBTN = {
+            if(addNewAudioScreenObjectStatus.isSavable()) {
+                //Copy file and Save Uri
+                if(FileManger.onSave(  context,
+                        addNewAudioScreenObjectStatus.selectedAudioUri!! ,
+                        addNewAudioScreenObjectStatus.selectedAudioFileName,
+                        r)) {
+                            ToastHelper.sendToastMesage( audioSavedMsg, context)
+                }else{
+                            ToastHelper.sendToastMesage( audioErrorMsg, context)
+                }
+                //Reset MediaPlayerFW
+                MediaPlayerFW.reset()
+                //End Activity
+                finish()
+            }
+        },
+        context)
+
+
 
 }

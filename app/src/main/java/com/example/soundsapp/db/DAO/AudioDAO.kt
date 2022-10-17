@@ -17,7 +17,7 @@ abstract class AudioDAO {
     @Query("SELECT * FROM audios WHERE id = :id")
     abstract fun findById(id: Int): Audio
 
-    @Query("SELECT * FROM audios WHERE audios.group_id = :groupId")
+    @Query("SELECT * FROM audios WHERE audios.group_id = :groupId ORDER BY audios.favorite DESC")
     abstract fun getAudiosByGroupIdAndSortedByFavorite(groupId: Int): List<Audio>
 
     @Query(
