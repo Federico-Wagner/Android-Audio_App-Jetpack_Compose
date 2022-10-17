@@ -24,7 +24,8 @@
         tools:targetApi="31">
 
 
-        <activity android:name=".UploadFromMemoryActivity"
+        <activity
+            android:name=".UploadFromMemoryActivity"
             android:theme="@style/Theme.AppCompat"
             android:exported="true"
             android:grantUriPermissions="true">
@@ -45,28 +46,6 @@
             </intent-filter>
         </activity>
 
-
-<!--        <provider-->
-<!--            android:authorities="com.example.soundsapp.MainActivity.provider"-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true"-->
-<!--            android:enabled="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/filepaths"/>-->
-<!--        </provider>-->
-
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="com.example.soundsapp.MainActivity.provider"-->
-<!--            android:grantUriPermissions="true"-->
-<!--            android:exported="true"-->
-<!--            android:permission="android.permission.MANAGE_DOCUMENTS">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.content.action.DOCUMENTS_PROVIDER" />-->
-<!--            </intent-filter>-->
-<!--        </provider>-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -74,7 +53,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" /> // provider_paths.xml file path in this example
+                android:resource="@xml/filepaths" />
         </provider>
 
     </application>

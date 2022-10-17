@@ -146,6 +146,7 @@ fun AudioAppScreen(
                             navController.navigate(AppScreen.Start.name)
                         }
                     },
+                    showSelectionBTNs = true,
                     context)
             }
             composable(route = AppScreen.Details.name) {

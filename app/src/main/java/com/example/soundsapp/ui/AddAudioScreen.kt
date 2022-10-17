@@ -1,6 +1,9 @@
 package com.example.soundsapp.ui
 
+import android.app.Activity
+import android.app.ActivityManager
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,12 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.getSystemService
+import androidx.navigation.ActivityNavigator
+import androidx.navigation.ActivityNavigatorExtras
+import com.example.soundsapp.BuildConfig
 import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.db.entity.Group
@@ -63,6 +71,7 @@ fun SelectAudio(groups: List<Group>,
                 audioSearchBTN: () -> Unit,
                 discardBTN: () -> Unit,
                 saveBTN: (String) -> Unit,
+                showSelectionBTNs : Boolean,
                 context: Context,
                 modifier: Modifier = Modifier){
     Box(
@@ -81,6 +90,7 @@ fun SelectAudio(groups: List<Group>,
             audioSearchBTN,
             discardBTN,
             saveBTN,
+            showSelectionBTNs,
             context)
     }
 }
@@ -91,6 +101,7 @@ fun AddAudioScreen(groups: List<Group>,
                    audioSearchBTN: () -> Unit,
                    discardBTN: () -> Unit,
                    saveBTN: (String) -> Unit,
+                   showSelectionBTNs : Boolean,
                    context: Context,
                    modifier: Modifier = Modifier
 )
@@ -140,6 +151,7 @@ fun AddAudioScreen(groups: List<Group>,
         false -> { Green500 }
     }
 
+
     Column(
         modifier = modifier
             .height(400.dp)
@@ -177,29 +189,31 @@ fun AddAudioScreen(groups: List<Group>,
                 label = { Text("Selected file: ") },
                 readOnly = true
             )
-
-            //SEARCH AUDIO BUTTON
-            Box(modifier = modifier
-                .clip(RoundedCornerShape(30))
-                .padding(top = 5.dp),
-                contentAlignment = Alignment.Center
-            ){
-                Icon(Icons.Rounded.AttachFile,
-                    contentDescription = "Search Audio",
+            if(showSelectionBTNs) {
+                //SEARCH AUDIO BUTTON
+                Box(
                     modifier = modifier
-                        .clickable {
-                            if (MediaPlayerFW.player.isPlaying) {
-                                MediaPlayerFW.stop()
+                        .clip(RoundedCornerShape(30))
+                        .padding(top = 5.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(Icons.Rounded.AttachFile,
+                        contentDescription = "Search Audio",
+                        modifier = modifier
+                            .clickable {
+                                if (MediaPlayerFW.player.isPlaying) {
+                                    MediaPlayerFW.stop()
+                                }
+                                audioSearchBTN()
+                                audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
+                                update()
+                                playerState = MediaPlayerFW.PlayerState.STOP
                             }
-                            audioSearchBTN()
-                            audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
-                            update()
-                            playerState = MediaPlayerFW.PlayerState.STOP
-                        }
-                        .size(45.dp, 55.dp)
-                        .padding(6.dp)
-                        .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
-                )
+                            .size(45.dp, 55.dp)
+                            .padding(6.dp)
+                            .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
+                    )
+                }
             }
         }
         //GROUP
@@ -235,17 +249,19 @@ fun AddAudioScreen(groups: List<Group>,
                 }
             }
             Spacer(modifier = modifier.padding(5.dp))
-            //NEW! BTN
-            Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
-                    .padding(5.dp)
-                    .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(40))
-                    .clickable { navigateToGroupManagerScreen() }
-                    .padding(3.dp),
-                textAlign = TextAlign.Center
-            )
+            if(showSelectionBTNs) {
+                //NEW! BTN
+                Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .padding(5.dp)
+                        .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(40))
+                        .clickable { navigateToGroupManagerScreen() }
+                        .padding(3.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         Spacer(modifier = modifier.padding(7.dp))

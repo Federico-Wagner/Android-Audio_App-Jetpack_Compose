@@ -68,15 +68,11 @@ fun UploadFromMemoryActivityScreen(
 
     SelectAudio(
         DataBase.getAllGroups(),
-        navigateToGroupManagerScreen = {
-//                            MediaPlayerFW.reset()
-//                            navController.navigate(AppScreen.GroupManager.name)
-        },
-        audioSearchBTN = {},
+        navigateToGroupManagerScreen = { },
+        audioSearchBTN = { },
         discardBTN = {
-//                            addNewAudioScreenObjectStatus.reset()
-//                            MediaPlayerFW.reset()
-//                            navController.navigate(AppScreen.Start.name)
+            addNewAudioScreenObjectStatus.reset()
+            MediaPlayerFW.reset()
             finish()
         },
         saveBTN = {
@@ -85,10 +81,10 @@ fun UploadFromMemoryActivityScreen(
                 if(FileManger.onSave(  context,
                         addNewAudioScreenObjectStatus.selectedAudioUri!! ,
                         addNewAudioScreenObjectStatus.selectedAudioFileName,
-                        r)) {
-                            ToastHelper.sendToastMesage( audioSavedMsg, context)
+                        r)){
+                    ToastHelper.sendToastMesage( audioSavedMsg, context)
                 }else{
-                            ToastHelper.sendToastMesage( audioErrorMsg, context)
+                    ToastHelper.sendToastMesage( audioErrorMsg, context)
                 }
                 //Reset MediaPlayerFW
                 MediaPlayerFW.reset()
@@ -96,8 +92,6 @@ fun UploadFromMemoryActivityScreen(
                 finish()
             }
         },
+        showSelectionBTNs = false,
         context)
-
-
-
 }
