@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.core.content.UnusedAppRestrictionsConstants
-import androidx.core.net.toUri
-import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.ToastHelper
@@ -26,43 +22,20 @@ import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.SelectAudio
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
-import java.io.*
-import java.time.Instant
-import java.util.*
 
 
 class UploadFromMemoryActivity : AppCompatActivity() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val originalAudioUri: Uri? = intent.clipData?.getItemAt(0)?.uri
-
-        //Retrieving audio fileName
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME,
-            MediaStore.Audio.Media.DURATION,
-            MediaStore.Audio.Media.SIZE,
-        )
-        val cursor: Cursor? =
-            contentResolver.query(originalAudioUri!!, projection, null, null, null, null)
-        try {
-            if ((cursor != null) && cursor.moveToFirst()) {
-                val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (!cursor.isNull(nameIndex)) {
-                    addNewAudioScreenObjectStatus.selectedAudioFileName = cursor.getString(nameIndex)
-                }
-            }
-        } finally {
-            cursor?.close()
-        }
         addNewAudioScreenObjectStatus.selectedAudioUri = originalAudioUri
+        addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(originalAudioUri,contentResolver)!!
+
 
         setContent {
             UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
         }
-
     }
 }
 
@@ -70,7 +43,6 @@ class UploadFromMemoryActivity : AppCompatActivity() {
 fun UploadFromMemoryActivityScreen(
     finish : ()-> Unit,
     r: ContentResolver
-
 ){
     val audioSavedMsg = stringResource(R.string.audioSaved)
     val audioErrorMsg = stringResource(R.string.audioError)

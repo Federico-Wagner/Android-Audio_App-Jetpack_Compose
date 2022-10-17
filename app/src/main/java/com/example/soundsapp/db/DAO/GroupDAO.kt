@@ -1,7 +1,6 @@
 package com.example.soundsapp.db.DAO
 
 import androidx.room.*
-import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.db.entity.Group
 
 

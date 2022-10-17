@@ -2,11 +2,12 @@ package com.example.soundsapp.helpers
 
 import android.content.ContentResolver
 import android.content.Context
+import android.database.Cursor
 import android.net.Uri
-import androidx.compose.ui.res.stringResource
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import androidx.core.net.toUri
 import com.example.soundsapp.AUDIO_FILES_FOLDER_NAME
-import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
@@ -63,5 +64,28 @@ object FileManger {
             dir.mkdir()
         }
         return dir
+    }
+
+    fun getFileName(audioUri: Uri?, r: ContentResolver): String?{
+        //Retrieving audio fileName
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.SIZE,
+        )
+        val cursor: Cursor? =
+            r.query(audioUri!!, projection, null, null, null, null)
+        try {
+            if ((cursor != null) && cursor.moveToFirst()) {
+                val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (!cursor.isNull(nameIndex)) {
+                    return cursor.getString(nameIndex)
+                }
+            }
+        } finally {
+            cursor?.close()
+        }
+        return null
     }
 }

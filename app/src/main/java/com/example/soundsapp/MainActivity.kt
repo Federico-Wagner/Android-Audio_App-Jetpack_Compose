@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import com.example.soundsapp.ui.theme.SoundsAppTheme
@@ -29,32 +30,14 @@ class MainActivity : ComponentActivity() {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         resultLauncher.launch(intent)
     }
+
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val audioUri: Uri? = result.data?.data?.normalizeScheme()
-            // Save Uri & PATH of selected AUDIO FILE
+            // Save Uri , PATH & FILE NAME of selected AUDIO FILE
             addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
             addNewAudioScreenObjectStatus.selectedAudioPath = result.data?.data?.path
-
-            //Retrieving audio fileName
-            val projection = arrayOf(
-                MediaStore.Audio.Media._ID,
-                MediaStore.Audio.Media.DISPLAY_NAME,
-                MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.SIZE,
-            )
-            val cursor: Cursor? =
-                contentResolver.query(audioUri!!, projection, null, null, null, null)
-            try {
-                if ((cursor != null) && cursor.moveToFirst()) {
-                    val nameIndex: Int = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (!cursor.isNull(nameIndex)) {
-                        addNewAudioScreenObjectStatus.selectedAudioFileName = cursor.getString(nameIndex)
-                    }
-                }
-            } finally {
-                cursor?.close()
-            }
+            addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(audioUri,contentResolver)!!
         }
     }
 
@@ -70,19 +53,6 @@ class MainActivity : ComponentActivity() {
         DataBase.showAllGroupsRecords()
 //        DataBase.deleteAllRecords()
 
-        DataBase.getAllRecords().forEach{
-            try {
-                grantUriPermission(
-                    packageName,
-                    Uri.parse(it.audioURI),
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-            }catch (e: Exception){
-                println(e)
-            }
-        }
-
-        contentResolver
 
         setContent {
             SoundsAppTheme(darkTheme = true) {
