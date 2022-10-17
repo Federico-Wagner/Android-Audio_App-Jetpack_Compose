@@ -28,6 +28,12 @@ class UploadFromMemoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //WARMUP
+        DataBase.createDB(applicationContext)
+        if(DataBase.getAllGroups().size == 0){
+            DataBase.groupCreate("General", false)
+        }
+
         val originalAudioUri: Uri? = intent.clipData?.getItemAt(0)?.uri
         addNewAudioScreenObjectStatus.selectedAudioUri = originalAudioUri
         addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(originalAudioUri,contentResolver)!!
