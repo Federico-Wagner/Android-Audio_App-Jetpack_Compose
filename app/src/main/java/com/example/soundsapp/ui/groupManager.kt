@@ -13,10 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.soundsapp.R
+import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.ToastHelper
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.shared.GroupSelector
 
 enum class GroupManagerState {
     HOME, CREATE, EDIT, DELETE
@@ -24,9 +28,7 @@ enum class GroupManagerState {
 
 @Composable
 fun GroupManager(context: Context){
-
     var screenState by remember { mutableStateOf(GroupManagerState.HOME) }
-
     val goBack = fun(){
         screenState = GroupManagerState.HOME
     }
@@ -59,7 +61,6 @@ fun GroupManagerHOME(context: Context, modifier: Modifier = Modifier){
 }
 @Composable
 fun GroupManagerCREATE(goBack: () -> Unit, context: Context,  modifier: Modifier = Modifier){
-//    Text(text = "CREATE PAGE")
     var groupName by remember { mutableStateOf("") }
 
     Column() {
@@ -90,53 +91,17 @@ fun GroupManagerCREATE(goBack: () -> Unit, context: Context,  modifier: Modifier
 }
 @Composable
 fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = Modifier){
-    Text(text = "EDIT PAGE")
     val groups = DataBase.getAllGroups()
-    // Declaring a boolean value to store
-    // the expanded state of the Text Field
-    var mExpanded by remember { mutableStateOf(false) }
-    // Create a string value to store the selected city
     var mSelectedGroup by remember { mutableStateOf(groups[0]) }
     var newGroupName by remember { mutableStateOf("") }
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
+    val onGroupItemClick = fun(group: Group){
+    mSelectedGroup = group
+    }
+    val toastMsg = stringResource(id = R.string.groupEdit)
 
-    //GROUP
     Column() {
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .width(280.dp)
-                    .padding(end = 20.dp),
-                value = mSelectedGroup.groupName,
-                onValueChange = { },
-                label = { Text("Group Name") },
-                trailingIcon = {
-                    Icon(icon, "contentDescription",
-                        Modifier.clickable { mExpanded = !mExpanded })
-                }
-            )
-            DropdownMenu(
-                expanded = mExpanded,
-                onDismissRequest = { mExpanded = false },
-                modifier = Modifier
-            ) {
-                groups.forEach { group ->
-                    DropdownMenuItem(onClick = {
-                        mSelectedGroup = group
-                        mExpanded = false
-                    }) {
-                        Text(text = group.groupName)
-                    }
-                }
-            }
-        }
+        GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 280.dp)
+
         OutlinedTextField(
             modifier = modifier
                 .width(280.dp)
@@ -145,13 +110,13 @@ fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = 
             onValueChange = { newGroupName = it },
             label = { Text("New Group Name") },
         )
-
         Row() {
             Button(onClick = { goBack() }) {
                 Text(text = "Go back")
             }
             Button(onClick = {
                 if(DataBase.updateByEntitySAFE(mSelectedGroup, newGroupName)){
+                    ToastHelper.sendToastMesage(toastMsg, context)
                     goBack()
                 }},
             enabled = (newGroupName != "" && newGroupName != mSelectedGroup.groupName)) {
@@ -163,50 +128,14 @@ fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = 
 @Composable
 fun GroupManagerDELETE(goBack: () -> Unit, context: Context, modifier: Modifier = Modifier){
     val groups = DataBase.getAllGroups()
-    // Declaring a boolean value to store
-    // the expanded state of the Text Field
-    var mExpanded by remember { mutableStateOf(false) }
-    // Create a string value to store the selected city
     var mSelectedGroup by remember { mutableStateOf(groups[0]) }
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
+    val onGroupItemClick = fun(group: Group){
+        mSelectedGroup = group
+    }
+    val toastMsg = stringResource(id = R.string.groupDeleted)
 
-    //GROUP
     Column() {
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            OutlinedTextField(
-                modifier = modifier
-                    .width(280.dp)
-                    .padding(end = 20.dp),
-                value = mSelectedGroup.groupName,
-                onValueChange = { },
-                label = { Text("Group Name") },
-                trailingIcon = {
-                    Icon(icon, "contentDescription",
-                        Modifier.clickable { mExpanded = !mExpanded })
-                }
-            )
-            DropdownMenu(
-                expanded = mExpanded,
-                onDismissRequest = { mExpanded = false },
-                modifier = Modifier
-            ) {
-                groups.forEach { group ->
-                    DropdownMenuItem(onClick = {
-                        mSelectedGroup = group
-                        mExpanded = false
-                    }) {
-                        Text(text = group.groupName)
-                    }
-                }
-            }
-        }
+        GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 280.dp)
 
         Row() {
             Button(onClick = { goBack() }) {
@@ -214,6 +143,7 @@ fun GroupManagerDELETE(goBack: () -> Unit, context: Context, modifier: Modifier 
             }
             Button(onClick = {
                 if(DataBase.deleteGroupByEntitySAFE(mSelectedGroup)){
+                    ToastHelper.sendToastMesage(toastMsg, context)
                     goBack()
             } }) {
                 Text(text = "Delete")

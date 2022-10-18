@@ -36,6 +36,8 @@ import com.example.soundsapp.R
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.shared.GroupSelector
 import com.example.soundsapp.ui.theme.*
 
 object addNewAudioScreenObjectStatus{
@@ -110,21 +112,12 @@ fun AddAudioScreen(groups: List<Group>,
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
     var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
 
-    // Declaring a boolean value to store
-    // the expanded state of the Text Field
-    var mExpanded by remember { mutableStateOf(false) }
-    // Create a string value to store the selected city
-    var mSelectedText by remember { mutableStateOf("") }
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-    val getGroupName =  fun(): String{
-        val group = groups.find { it.groupId == addNewAudioScreenObjectStatus.groupId }
-        return group!!.groupName
-    }
-    mSelectedText = getGroupName()
 
+    var mSelectedGroup by remember { mutableStateOf(groups[0]) }
+    val onGroupItemClick = fun(group: Group){
+        mSelectedGroup = group
+        addNewAudioScreenObjectStatus.groupId = group.groupId
+    }
 
     val onFinish = fun(){
         playerState = MediaPlayerFW.state
@@ -145,12 +138,10 @@ fun AddAudioScreen(groups: List<Group>,
             onFinish)
         update()
     }
-
     val saveBtnColor = when ( addNewAudioScreenObjectStatus.isSavable() ) {
         true -> { Green200 }
         false -> { Green500 }
     }
-
 
     Column(
         modifier = modifier
@@ -222,32 +213,8 @@ fun AddAudioScreen(groups: List<Group>,
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ){
-            OutlinedTextField(
-                modifier = modifier
-                    .width(240.dp),
-                value =  mSelectedText,
-                onValueChange = { },
-                label = { Text("Audio group") },
-                trailingIcon = {
-                    Icon(icon,"contentDescription",
-                        Modifier.clickable { mExpanded = !mExpanded })
-                }
-            )
-            DropdownMenu(
-                expanded = mExpanded,
-                onDismissRequest = { mExpanded = false },
-                modifier = Modifier
-            ) {
-                groups.forEach { group ->
-                    DropdownMenuItem(onClick = {
-                        mSelectedText = group.groupName
-                        addNewAudioScreenObjectStatus.groupId = group.groupId
-                        mExpanded = false
-                    }) {
-                        Text(text = group.groupName)
-                    }
-                }
-            }
+            GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 240.dp)
+
             Spacer(modifier = modifier.padding(5.dp))
             if(showSelectionBTNs) {
                 //NEW! BTN

@@ -26,4 +26,10 @@
 
     <string name="audioError">Error: ${}</string>
 
+
+    <string name="groupDeleted">Group deleted</string>
+    <string name="groupCreated">Group created </string>
+    <string name="groupEdit">Group updated </string>
+
+
 </resources>
