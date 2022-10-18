@@ -14,7 +14,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.ui.theme.*
 
@@ -65,7 +64,7 @@ fun PlayBTN(playPause : ImageVector?,
         if(enabled) {
             color = when (playerState) {
                 MediaPlayerFW.PlayerState.STOP -> { Green200 }
-                MediaPlayerFW.PlayerState.PLAY -> { White300 }
+                MediaPlayerFW.PlayerState.PLAY -> { White000 }
                 MediaPlayerFW.PlayerState.PAUSE -> { Green200 }
                 else -> {Green200}
             }

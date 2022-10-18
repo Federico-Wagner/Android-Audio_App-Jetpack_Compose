@@ -112,7 +112,6 @@ fun AddAudioScreen(groups: List<Group>,
     var audioFile by remember { mutableStateOf(addNewAudioScreenObjectStatus.selectedAudioFileName) }
     var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
 
-
     var mSelectedGroup by remember { mutableStateOf(groups[0]) }
     val onGroupItemClick = fun(group: Group){
         mSelectedGroup = group

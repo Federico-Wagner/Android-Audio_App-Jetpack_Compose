@@ -38,11 +38,6 @@ class UploadFromMemoryActivity : AppCompatActivity() {
         addNewAudioScreenObjectStatus.selectedAudioUri = originalAudioUri
         addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(originalAudioUri,contentResolver)!!
 
-
-//        setContent {
-//            UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
-//        }
-
         setContent {
             SoundsAppTheme(darkTheme = true) {
                 Surface(

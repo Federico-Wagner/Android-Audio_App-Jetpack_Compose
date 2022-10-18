@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.sharp.MoreVert
 import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -72,8 +73,8 @@ fun MainScreen( soundsDBx: List<Audio>,
                     modifier = modifier.padding(10.dp),
                     style = MaterialTheme.typography.h4)
                 Icon(
-                    Icons.Sharp.Search,
-                    contentDescription = "search",
+                    Icons.Sharp.MoreVert,
+                    contentDescription = "group Manager",
                     modifier = modifier
                         .clickable { search() }
                         .size(60.dp)

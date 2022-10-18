@@ -1,7 +1,6 @@
 package com.example.soundsapp.ui
 
 import android.content.Context
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,15 +13,12 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -145,7 +141,7 @@ fun EditAudioLayOut(audio : Audio,
 
     //DEFAULT STAR
     var starIcon : ImageVector = Icons.Default.StarBorder
-    var starColor : Color = White300
+    var starColor : Color = White000
     // DEFAULT / FAV STAR SELECTION
     val updateStar = fun(){
         favoriteState = editAudioObjectStatus.selectedAudio!!.favorite
@@ -156,7 +152,7 @@ fun EditAudioLayOut(audio : Audio,
             }
             false -> {
                 starIcon = Icons.Default.StarBorder
-                starColor = White300
+                starColor = White000
             }
         }
     }
