@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SoundsApp</string>
+    <string name="app_name">AudioShare</string>
     <string name="send_error">Error while sending the audio file</string>
     <string name="share">Share audio: $</string>
 

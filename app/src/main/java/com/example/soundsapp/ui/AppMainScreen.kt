@@ -40,6 +40,7 @@ import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.shared.WelcomeScreen
 import com.example.soundsapp.ui.theme.Black900
 import com.example.soundsapp.ui.theme.Gold600
 import com.example.soundsapp.ui.theme.Purple700
@@ -69,7 +70,7 @@ fun MainScreen( soundsDBx: List<Audio>,
                         .padding(start = 10.dp, end = 10.dp, top = 10.dp)
                         .size(45.dp)
                         .clip(RoundedCornerShape(50)))
-                Text(text = "Sounds App",
+                Text(text = stringResource(id = R.string.app_name),
                     modifier = modifier.padding(10.dp),
                     style = MaterialTheme.typography.h4)
                 Icon(
@@ -104,19 +105,21 @@ fun MainScreen( soundsDBx: List<Audio>,
             Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally)
         {
-            SoundsList(soundsDB,groupsDB,navigateToAudioDetail, context, contentResolver)
+            if(soundsDB.isNotEmpty()){
+                SoundsList(groupsDB,navigateToAudioDetail, context, contentResolver)
+            }else{
+                WelcomeScreen()
+            }
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun SoundsList(soundsDB: List<Audio>,
-               groupsDB: List<Group>,
+fun SoundsList(groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
                context: Context,
                contentResolver : ContentResolver) {
-
     LazyVerticalGrid(cells = GridCells.Fixed(1)){
         items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context, contentResolver)}
     }
