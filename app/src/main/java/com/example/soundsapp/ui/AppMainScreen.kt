@@ -64,37 +64,38 @@ fun MainScreen( soundsDBx: List<Audio>,
     Scaffold(
         modifier = modifier.fillMaxWidth(),
         topBar = {
-            Row{
-                Image(painter = painterResource(R.drawable.icon), contentDescription = "iconImg",
-                    modifier
-                        .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                        .size(45.dp)
-                        .clip(RoundedCornerShape(50)))
+            Row(verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = 28.dp, end = 15.dp, top = 10.dp)){
+                Image(painter = painterResource(R.drawable.imagen1), contentDescription = "iconImg",
+                    modifier.size(40.dp)
+                )
                 Text(text = stringResource(id = R.string.app_name),
-                    modifier = modifier.padding(10.dp),
                     style = MaterialTheme.typography.h4)
                 Icon(
                     Icons.Sharp.MoreVert,
                     contentDescription = "group Manager",
                     modifier = modifier
                         .clickable { search() }
-                        .size(60.dp)
-                        .padding(start = 30.dp, top = 15.dp)
+                        .size(40.dp)
                 )
             }
         },
         bottomBar = {
-            Column(
-                modifier
-                    .fillMaxWidth()
-                    .background(color = Color.Black)){
+            Column(horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier
+                .fillMaxWidth()
+                .background(color = Color.Black)){
                 Spacer(modifier = modifier.padding(5.dp))
-                Row( modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                Row( modifier = modifier.fillMaxWidth(0.9F),
+                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically)
                 {
                     Text(text = "Developed by Federico Wagner",
                         fontSize = 13.sp, modifier= Modifier.padding(bottom = 5.dp))
+                    Spacer(modifier = modifier.padding(30.dp))
                     addAudioBTN( navigateToNewAudio )
                 }
                 Spacer(modifier = modifier.padding(5.dp))
@@ -151,10 +152,14 @@ fun GroupView(  group: Group,
         }
     }
 
-    Column {
+    Column(modifier = modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally) {
         if( audiosInThisGroup.isNotEmpty() ){
-            Row(modifier = modifier.clickable { showHideGroup() }) {
-                Spacer(modifier = modifier.padding(10.dp))
+            Row(modifier = modifier
+                .fillMaxWidth()
+                .clickable { showHideGroup() },
+                horizontalArrangement = Arrangement.Start) {
+                Spacer(modifier = modifier.padding(5.dp))
                 Text(text = group.groupName, color = Color.Gray, fontSize = 23.sp)
                 Spacer(modifier = modifier.padding(2.dp))
                 Text(text = "(" + audiosInThisGroup.size.toString() + ")",
@@ -193,25 +198,30 @@ fun SoundCardDB( audio: Audio,
     val favNoramlModifier: Modifier = when(audio.favorite){
         true -> {
             Modifier
-                .padding(8.dp)
-                .height(60.dp)
-                .border(1.dp, color = Gold600, shape = RoundedCornerShape(30))
+                .fillMaxWidth(0.5F)
+                .padding(5.dp)
                 .clip(RoundedCornerShape(30))
+                .border(1.dp, color = Gold600, shape = RoundedCornerShape(30))
+                .height(60.dp)
              }
         false -> {
             Modifier
-                .padding(8.dp)
+                .fillMaxWidth(0.5F)
+                .padding(5.dp)
+                .clip(RoundedCornerShape(30))
                 .height(60.dp)
-                .clip(RoundedCornerShape(30)) }
+        }
     }
 
     Card(modifier = favNoramlModifier,
-        elevation = 5.dp
+        elevation = 5.dp,
     ){
-        Row(modifier = modifier.fillMaxHeight(),
-            verticalAlignment = Alignment.CenterVertically){
+        Row(modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
 
-            PlayBTN(playPause, null, onTap, context = context, modifier= modifier)
+            PlayBTN(playPause, null, onTap, context = context)
 
             Text(text = audio.audioUserName,
                 modifier = modifier
@@ -222,7 +232,8 @@ fun SoundCardDB( audio: Audio,
                     })
 
             Box(modifier = modifier
-                .clip(RoundedCornerShape(50)),
+                .clip(RoundedCornerShape(50))
+                .padding(end = 8.dp),
             ){
                 Icon(
                     Icons.Rounded.Share,
