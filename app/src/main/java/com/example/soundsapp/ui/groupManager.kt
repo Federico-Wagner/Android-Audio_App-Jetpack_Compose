@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -92,6 +94,7 @@ fun GroupManagerHOME(context: Context, modifier: Modifier = Modifier){
 @Composable
 fun GroupManagerCREATE(goBack: () -> Unit, context: Context,  modifier: Modifier = Modifier){
     var groupName by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()) {
@@ -103,7 +106,9 @@ fun GroupManagerCREATE(goBack: () -> Unit, context: Context,  modifier: Modifier
             onValueChange = {
                 groupName = it
             },
-            label = { Text("New Group Name") }
+            label = { Text("New Group Name") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),              // Icon
+            keyboardActions = KeyboardActions(onDone =  { focusManager.clearFocus() })  // Action
         )
         Spacer(modifier = modifier.padding(15.dp))
         Row(modifier = Modifier.fillMaxWidth(),
@@ -135,6 +140,7 @@ fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = 
     mSelectedGroup = group
     }
     val toastMsg = stringResource(id = R.string.groupEdit)
+    val focusManager = LocalFocusManager.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()) {
@@ -143,11 +149,11 @@ fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = 
         OutlinedTextField(
             modifier = modifier
                 .fillMaxWidth(0.7F),
-//                .width(280.dp)
-//                .padding(end = 20.dp),
             value = newGroupName,
             onValueChange = { newGroupName = it },
             label = { Text("New Group Name") },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),              // Icon
+            keyboardActions = KeyboardActions(onDone =  { focusManager.clearFocus() })  // Action
         )
         Spacer(modifier = modifier.padding(15.dp))
         Row(modifier = Modifier.fillMaxWidth(),

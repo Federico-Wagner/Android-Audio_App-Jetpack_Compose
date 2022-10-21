@@ -44,7 +44,7 @@ class UploadFromMemoryActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver)
+                    UploadFromMemoryActivityScreen(finish = {finish()}, contentResolver, LocalContext.current)
                 }
             }
         }
@@ -55,11 +55,11 @@ class UploadFromMemoryActivity : AppCompatActivity() {
 @Composable
 fun UploadFromMemoryActivityScreen(
     finish : ()-> Unit,
-    r: ContentResolver
+    r: ContentResolver,
+    context: Context
 ){
     val audioSavedMsg = stringResource(R.string.audioSaved)
     val audioErrorMsg = stringResource(R.string.audioError)
-    val context = LocalContext.current
 
     SelectAudio(
         DataBase.getAllGroups(),

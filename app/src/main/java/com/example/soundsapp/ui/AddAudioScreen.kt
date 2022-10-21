@@ -10,6 +10,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActionScope
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -151,6 +154,8 @@ fun AddAudioScreen(groups: List<Group>,
     }
     addNewAudioScreenObjectStatus.updateExternal = updateFileName
 
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = modifier
             .height(400.dp)
@@ -169,7 +174,8 @@ fun AddAudioScreen(groups: List<Group>,
                 addNewAudioScreenObjectStatus.selectedAudioUserName = it
             },
             label = { Text("Enter audio name: ") },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),              // Icon
+            keyboardActions = KeyboardActions(onDone =  { focusManager.clearFocus() })  // Action
         )
 
         // AUDIO FILE NAME FROM URI
@@ -213,7 +219,6 @@ fun AddAudioScreen(groups: List<Group>,
                 Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
                     modifier = modifier
                         .fillMaxWidth()
-//                        .height(40.dp)
                         .padding(5.dp)
                         .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(40))
                         .clickable { navigateToGroupManagerScreen() }
