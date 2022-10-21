@@ -48,6 +48,8 @@ object addNewAudioScreenObjectStatus{
     var favorite: Boolean = false   //TODO hardcoded value
     var groupId: Long = 1 //GENERAL GRP
 
+    var updateExternal : () -> Unit = fun(){} // The not null trick ;)
+
     var playerState : MediaPlayerFW.PlayerState = MediaPlayerFW.state
 
     fun reset(){
@@ -55,9 +57,10 @@ object addNewAudioScreenObjectStatus{
         this.selectedAudioPath = null
         this.selectedAudioUserName = ""
         this.selectedAudioFileName = ""
-        this.favorite = false        //TODO hardcoded value
+        this.favorite = false
         this.groupId = 1
         this.playerState = MediaPlayerFW.PlayerState.STOP
+        this.updateExternal = fun(){} // The not null trick ;)
     }
     fun isSavable(): Boolean {
         return( this.selectedAudioUri != null &&
@@ -142,6 +145,12 @@ fun AddAudioScreen(groups: List<Group>,
         false -> { Green500 }
     }
 
+    // For external operations to update this field and trigger recomposition HOTFIX
+    val updateFileName = fun(){
+        audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
+    }
+    addNewAudioScreenObjectStatus.updateExternal = updateFileName
+
     Column(
         modifier = modifier
             .height(400.dp)
@@ -149,6 +158,7 @@ fun AddAudioScreen(groups: List<Group>,
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         // AUDIO NAME FROM USER
         OutlinedTextField(
             modifier = modifier
@@ -169,50 +179,33 @@ fun AddAudioScreen(groups: List<Group>,
             verticalAlignment = Alignment.CenterVertically,
         ){
             OutlinedTextField(
+                enabled = false,
                 modifier = modifier
-                    .width(260.dp)
-                    .padding(end = 20.dp),
+                    .fillMaxWidth()
+                    .clickable {
+                        if (MediaPlayerFW.player.isPlaying) {
+                            MediaPlayerFW.stop()
+                        }
+                        audioSearchBTN()
+                        update()
+                    },
                 value =  audioFile,
                 onValueChange = {
                                     //no action due to readonly ppt - never reached
                 },
-                label = { Text("Selected file: ") },
+                label = { Text("Select a file: ") },
                 readOnly = true
             )
-            if(showSelectionBTNs) {
-                //SEARCH AUDIO BUTTON
-                Box(
-                    modifier = modifier
-                        .clip(RoundedCornerShape(30))
-                        .padding(top = 5.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(Icons.Rounded.AttachFile,
-                        contentDescription = "Search Audio",
-                        modifier = modifier
-                            .clickable {
-                                if (MediaPlayerFW.player.isPlaying) {
-                                    MediaPlayerFW.stop()
-                                }
-                                audioSearchBTN()
-                                audioFile = addNewAudioScreenObjectStatus.selectedAudioFileName
-                                update()
-                                playerState = MediaPlayerFW.PlayerState.STOP
-                            }
-                            .size(45.dp, 55.dp)
-                            .padding(6.dp)
-                            .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(30))
-                    )
-                }
-            }
+            Spacer(modifier = modifier.padding(5.dp))
         }
+
         //GROUP
         Row(
             modifier = modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ){
-            GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 240.dp)
+            GroupSelector(DataBase.getAllGroups(), onGroupItemClick)
 
             Spacer(modifier = modifier.padding(5.dp))
             if(showSelectionBTNs) {
@@ -220,7 +213,7 @@ fun AddAudioScreen(groups: List<Group>,
                 Text(text = stringResource(R.string.newG), color = Green200, fontSize = 15.sp,
                     modifier = modifier
                         .fillMaxWidth()
-                        .height(40.dp)
+//                        .height(40.dp)
                         .padding(5.dp)
                         .border(width = 1.dp, color = Green200, shape = RoundedCornerShape(40))
                         .clickable { navigateToGroupManagerScreen() }

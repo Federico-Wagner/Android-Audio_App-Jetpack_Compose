@@ -40,6 +40,7 @@ class MainActivity : ComponentActivity() {
             addNewAudioScreenObjectStatus.selectedAudioUri = audioUri
             addNewAudioScreenObjectStatus.selectedAudioPath = result.data?.data?.path
             addNewAudioScreenObjectStatus.selectedAudioFileName = FileManger.getFileName(audioUri,contentResolver)!!
+            addNewAudioScreenObjectStatus.updateExternal()
         }
     }
 
@@ -73,7 +74,5 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         println("MainActivity - onResume")
-
-
     }
 }

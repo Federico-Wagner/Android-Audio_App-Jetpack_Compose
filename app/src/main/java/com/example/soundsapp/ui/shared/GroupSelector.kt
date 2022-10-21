@@ -20,7 +20,6 @@ import com.example.soundsapp.db.entity.Group
 @Composable
 fun GroupSelector(groups: List<Group>,
                   onGroupItemClick: (Group) -> Unit,
-                  width: Dp,
                   modifier: Modifier = Modifier) {
     var mExpanded by remember { mutableStateOf(false) }
     var mSelectedGroup by remember { mutableStateOf(groups[0]) }
@@ -33,7 +32,7 @@ fun GroupSelector(groups: List<Group>,
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
             modifier = modifier
-                .width(width),
+                .fillMaxWidth(0.7F),
             value = mSelectedGroup.groupName,
             onValueChange = { },
             label = { Text("Group Name") },

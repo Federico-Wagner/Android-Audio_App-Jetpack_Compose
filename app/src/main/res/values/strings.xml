@@ -6,13 +6,13 @@
     <string name="discard">Go back</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
-    <string name="newG">New!</string>
+    <string name="newG">New group!</string>
 
     <string name="mainScreen">Main Screen</string>
-    <string name="selectAudio">Select Audio</string>
+    <string name="selectAudio">New Audio</string>
     <string name="recordAudio">Record Audio</string>
     <string name="audioDetails">Audio Details</string>
-    <string name="groupManager">Group Management</string>
+    <string name="groupManager">Group Manager</string>
 
 
     <string name="generic">generic</string>

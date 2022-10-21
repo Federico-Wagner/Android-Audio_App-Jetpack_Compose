@@ -138,12 +138,13 @@ fun GroupManagerEDIT(goBack: () -> Unit, context: Context, modifier: Modifier = 
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()) {
-        GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 280.dp)
+        GroupSelector(DataBase.getAllGroups(), onGroupItemClick)
         Spacer(modifier = modifier.padding(8.dp))
         OutlinedTextField(
             modifier = modifier
-                .width(280.dp)
-                .padding(end = 20.dp),
+                .fillMaxWidth(0.7F),
+//                .width(280.dp)
+//                .padding(end = 20.dp),
             value = newGroupName,
             onValueChange = { newGroupName = it },
             label = { Text("New Group Name") },
@@ -180,7 +181,7 @@ fun GroupManagerDELETE(goBack: () -> Unit, context: Context, modifier: Modifier 
 
     Column(horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth()) {
-        GroupSelector(DataBase.getAllGroups(), onGroupItemClick, 280.dp)
+        GroupSelector(DataBase.getAllGroups(), onGroupItemClick)
         Spacer(modifier = modifier.padding(15.dp))
         Row(modifier = modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly) {
