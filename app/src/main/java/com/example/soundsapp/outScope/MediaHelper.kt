@@ -1,10 +1,14 @@
-package com.example.soundsapp.outScope
-
+//package com.example.soundsapp.outScope
+//
 //import android.content.ContentUris
 //import android.content.Context
 //import android.net.Uri
 //import android.os.Build
 //import android.provider.MediaStore
+//import androidx.core.net.toUri
+//import com.example.soundsapp.AUDIO_FILES_FOLDER_NAME
+//import com.example.soundsapp.model.DataBase
+//import java.io.File
 //import java.util.concurrent.TimeUnit
 //
 //object MediaHelper {
@@ -22,10 +26,13 @@ package com.example.soundsapp.outScope
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 //                MediaStore.Audio.Media.getContentUri(
 //                    MediaStore.VOLUME_EXTERNAL
+////                    MediaStore.VOLUME_INTERNAL
 //                )
 //            } else {
 //                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+////                MediaStore.Audio.Media.INTERNAL_CONTENT_URI
 //            }
+//
 //
 //        println("############# collection.encodedPath.toString() ##############")
 //        println( collection.encodedPath.toString() )
@@ -91,20 +98,20 @@ package com.example.soundsapp.outScope
 //}
 //
 //
-////        val projection = arrayOf(media-database-columns-to-retrieve)
-////        val selection = sql-where-clause-with-placeholder-variables
-////        val selectionArgs = values-of-placeholder-variables
-////        val sortOrder = sql-order-by-clause
-////
-////        applicationContext.contentResolver.query(
-////            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-////            projection,
-////            selection,
-////            selectionArgs,
-////            sortOrder
-////        )?.use { cursor ->
-////            while (cursor.moveToNext()) {
-////                // Use an ID column from the projection to get
-////                // a URI representing the media item itself.
-////            }
-////        }
+//////        val projection = arrayOf(media-database-columns-to-retrieve)
+//////        val selection = sql-where-clause-with-placeholder-variables
+//////        val selectionArgs = values-of-placeholder-variables
+//////        val sortOrder = sql-order-by-clause
+//////
+//////        applicationContext.contentResolver.query(
+//////            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+//////            projection,
+//////            selection,
+//////            selectionArgs,
+//////            sortOrder
+//////        )?.use { cursor ->
+//////            while (cursor.moveToNext()) {
+//////                // Use an ID column from the projection to get
+//////                // a URI representing the media item itself.
+//////            }
+//////        }

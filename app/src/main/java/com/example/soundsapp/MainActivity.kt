@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.net.toUri
 import com.example.soundsapp.db.entity.Audio
 import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.model.DataBase
@@ -57,6 +58,7 @@ class MainActivity : ComponentActivity() {
         DataBase.showAllAudioRecords()
         DataBase.showAllGroupsRecords()
 //        DataBase.deleteAllRecords()
+//        FileManger.deleteAllFiles(applicationContext)
 
         setContent {
             SoundsAppTheme(darkTheme = true) {

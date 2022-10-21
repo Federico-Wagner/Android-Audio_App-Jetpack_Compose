@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.core.net.toUri
 import com.example.soundsapp.AUDIO_FILES_FOLDER_NAME
 import com.example.soundsapp.db.entity.Audio
@@ -14,6 +15,7 @@ import com.example.soundsapp.ui.addNewAudioScreenObjectStatus
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.logging.Logger
 
 object FileManger {
 
@@ -88,4 +90,32 @@ object FileManger {
         }
         return null
     }
+
+    fun deleteFile(fileUriString : String) : Boolean{
+        return try{
+            val fileUri = Uri.parse(fileUriString)
+            val file = File(fileUri.path!!)
+            if (file.isFile){
+                file.delete()
+                Log.d("FileManger.deleteFile", "deleted file: $fileUriString")
+                true
+            }else{
+                Log.d("FileManger.deleteFile", "Could NOT delete file: $fileUriString")
+                false
+            }
+        }catch (e : Exception){
+            Log.d("FileManger.deleteFile", "error deleting audio: $fileUriString")
+            false
+        }
+    }
+
+    fun deleteAllFiles(context: Context){
+        // FOR DEBUG
+        val contect = context.filesDir.listFiles()!![0].listFiles()
+        for(audioFile in contect!!){
+            println( audioFile.path.toUri() )
+            FileManger.deleteFile(audioFile.path.toUri().toString())
+        }
+    }
+
 }

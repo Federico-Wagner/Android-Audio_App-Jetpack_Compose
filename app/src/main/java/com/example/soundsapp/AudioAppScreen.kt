@@ -170,6 +170,10 @@ fun AudioAppScreen(
                             toast.show()
                         },
                         deleteBTN = {
+
+                            FileManger.deleteFile(editAudioObjectStatus.selectedAudio!!.audioURI)
+
+
                             DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!)
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
@@ -178,6 +182,7 @@ fun AudioAppScreen(
                             val duration = Toast.LENGTH_SHORT
                             val toast = Toast.makeText(context, text, duration)
                             toast.show()
+
                         },
                         navigateToGroupManagerScreen = {
                             editAudioObjectStatus.reset()
