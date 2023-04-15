@@ -7,30 +7,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material.icons.sharp.MoreVert
-import androidx.compose.material.icons.sharp.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.Group
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.VectorGroup
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soundsapp.ui.theme.Green200
@@ -40,24 +30,22 @@ import com.example.soundsapp.db.entity.Group
 import com.example.soundsapp.helpers.MediaPlayerFW
 import com.example.soundsapp.helpers.shareSound
 import com.example.soundsapp.model.DataBase
+import com.example.soundsapp.ui.shared.DropDownSelector
 import com.example.soundsapp.ui.shared.WelcomeScreen
-import com.example.soundsapp.ui.theme.Black900
 import com.example.soundsapp.ui.theme.Gold600
-import com.example.soundsapp.ui.theme.Purple700
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.flowlayout.SizeMode
 
 
 @Composable
-fun MainScreen( soundsDBx: List<Audio>,
-                groupsDBx: List<Group>,
-                navigateToNewAudio: () -> Unit,
-                navigateToAudioDetail: () -> Unit,
-                search: () -> Unit,
-                context: Context,
-                contentResolver : ContentResolver,
-                modifier : Modifier = Modifier){
+fun MainScreen(soundsDBx: List<Audio>,
+               groupsDBx: List<Group>,
+               navigateToNewAudio: () -> Unit,
+               navigateToAudioDetail: () -> Unit,
+               toGroupManager: () -> Unit,
+               toAboutScreen: () -> Unit,
+               context: Context,
+               contentResolver : ContentResolver,
+               modifier : Modifier = Modifier){
     val soundsDB by remember { mutableStateOf(soundsDBx) }
     val groupsDB by remember { mutableStateOf(groupsDBx) }
 
@@ -74,13 +62,20 @@ fun MainScreen( soundsDBx: List<Audio>,
                 )
                 Text(text = stringResource(id = R.string.app_name),
                     style = MaterialTheme.typography.h4)
-                Icon(
-                    Icons.Sharp.MoreVert,
-                    contentDescription = "group Manager",
-                    modifier = modifier
-                        .clickable { search() }
-                        .size(40.dp)
+
+                //IMPLEMENT DROP MENO HERE
+                DropDownSelector(
+                    toGroupManager = { toGroupManager() },
+                    toAboutScreen = { toAboutScreen() },
+                    context = context
                 )
+//                Icon(
+//                    Icons.Sharp.MoreVert,
+//                    contentDescription = "group Manager",
+//                    modifier = modifier
+//                        .clickable { toGroupManager() }
+//                        .size(40.dp)
+//                )
             }
         },
         bottomBar = {

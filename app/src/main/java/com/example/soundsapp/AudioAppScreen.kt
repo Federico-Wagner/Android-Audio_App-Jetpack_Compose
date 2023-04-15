@@ -3,7 +3,6 @@ package com.example.soundsapp
 
 import android.content.ContentResolver
 import android.content.Context
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
@@ -24,6 +23,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.soundsapp.helpers.FileManger
 import com.example.soundsapp.helpers.MediaPlayerFW
+import com.example.soundsapp.helpers.ToastHelper
 import com.example.soundsapp.model.DataBase
 import com.example.soundsapp.ui.*
 
@@ -33,8 +33,9 @@ import com.example.soundsapp.ui.*
  */
 enum class AppScreen(@StringRes val title: Int) {
     Start(title = R.string.mainScreen),
-    Select(title = R.string.selectAudio),
-    Record(title = R.string.recordAudio),
+    NewAudio(title = R.string.selectAudio),
+    RecordAudio(title = R.string.recordAudio),   //future
+    About(title = R.string.about),          //future
     Details(title = R.string.audioDetails),
     GroupManager(title = R.string.groupManager)
 }
@@ -110,17 +111,18 @@ fun AudioAppScreen(
                     DataBase.getAllGroups(),
                     navigateToNewAudio = {
                         MediaPlayerFW.reset()
-                        navController.navigate(AppScreen.Select.name)
+                        navController.navigate(AppScreen.NewAudio.name)
                     },
                     navigateToAudioDetail = {
                         MediaPlayerFW.reset()
                         navController.navigate(AppScreen.Details.name)
                     },
-                    search = { navController.navigate(AppScreen.GroupManager.name) },
+                    toGroupManager = { navController.navigate(AppScreen.GroupManager.name) },
+                    toAboutScreen = { navController.navigate(AppScreen.About.name) },
                     context,
                     contentResolver )
             }
-            composable(route = AppScreen.Select.name) {
+            composable(route = AppScreen.NewAudio.name) {
                 SelectAudio(
                     DataBase.getAllGroups(),
                     navigateToGroupManagerScreen = {
@@ -164,25 +166,15 @@ fun AudioAppScreen(
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
-                            val text = "Audio updated"
-                            val duration = Toast.LENGTH_SHORT
-                            val toast = Toast.makeText(context, text, duration)
-                            toast.show()
+                            ToastHelper.sendToastMesage("Changes saved", context)
                         },
                         deleteBTN = {
-
                             FileManger.deleteFile(editAudioObjectStatus.selectedAudio!!.audioURI)
-
-
                             DataBase.deleteAudio(editAudioObjectStatus.selectedAudio!!)
                             editAudioObjectStatus.reset()
                             MediaPlayerFW.reset()
                             navController.navigate(AppScreen.Start.name)
-                            val text = "Audio deleted"
-                            val duration = Toast.LENGTH_SHORT
-                            val toast = Toast.makeText(context, text, duration)
-                            toast.show()
-
+                            ToastHelper.sendToastMesage("Audio deleted", context)
                         },
                         navigateToGroupManagerScreen = {
                             editAudioObjectStatus.reset()
@@ -194,6 +186,12 @@ fun AudioAppScreen(
             }
             composable(route = AppScreen.GroupManager.name) {
                 GroupManager(context)
+            }
+            composable(route = AppScreen.About.name) {
+                AboutScreen(context)
+            }
+            composable(route = AppScreen.RecordAudio.name) {
+//                GroupManager(context)
             }
         }
     }
