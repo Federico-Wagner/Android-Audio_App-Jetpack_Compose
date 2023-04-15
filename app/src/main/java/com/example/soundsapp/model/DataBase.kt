@@ -19,16 +19,18 @@ object DataBase {
     private lateinit var audioDao : AudioDAO
     private lateinit var groupDao : GroupDAO
     //WARMUP
-    fun createDB(applicationContext: Context){
-        val _db = Room.databaseBuilder(
-            applicationContext,
-            AudiosDataBase::class.java, "database-name"
-        ).allowMainThreadQueries()
+    fun createDB(applicationContext: Context) {
+        val _db = Room.databaseBuilder( applicationContext, AudiosDataBase::class.java, "database-name")
+            .allowMainThreadQueries()
             .fallbackToDestructiveMigration()
             .build()
         this.db = _db
         this.audioDao = _db.audioDAO()
         this.groupDao = _db.groupDAO()
+
+        if(getAllGroups().isEmpty()) {
+            groupCreate("General", false)
+        }
     }
 
     //GROUPS
@@ -80,6 +82,10 @@ object DataBase {
         }else {
             false
         }
+    }
+
+    fun deleteGeneralGroup(){
+        this.groupDao.deleteByEntity(this.groupDao.getGroupByName("General")!!)
     }
 
 

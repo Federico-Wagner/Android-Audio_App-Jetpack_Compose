@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit
 
 
 fun shareSound(context: Context, audio: Audio, r : ContentResolver) {
-
     try {
         println(Uri.parse(audio.audioURI).path!!)
         println(audio.audioPath)

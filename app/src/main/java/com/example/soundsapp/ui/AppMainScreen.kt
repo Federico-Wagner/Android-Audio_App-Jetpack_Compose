@@ -86,9 +86,9 @@ fun MainScreen( soundsDBx: List<Audio>,
         bottomBar = {
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = modifier
-                .fillMaxWidth()
-                .background(color = Color.Black)){
-                Spacer(modifier = modifier.padding(5.dp))
+                    .fillMaxWidth()
+                    .background(color = Color.Black)){
+//                Spacer(modifier = modifier.padding(5.dp))
                 Row( modifier = modifier.fillMaxWidth(0.9F),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically)
@@ -121,8 +121,11 @@ fun SoundsList(groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
                context: Context,
                contentResolver : ContentResolver) {
-    LazyVerticalGrid(cells = GridCells.Fixed(1)){
-        items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context, contentResolver)}
+    Column(){
+        LazyVerticalGrid(cells = GridCells.Fixed(1)){
+            items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context, contentResolver)}
+        }
+        Spacer(modifier = Modifier.padding(50.dp))
     }
 }
 
@@ -256,13 +259,13 @@ fun addAudioBTN(navigateToNewAudio : () -> Unit , modifier : Modifier = Modifier
         .clip(RoundedCornerShape(50)),
     ){
         Icon(Icons.Rounded.Add,
-            contentDescription = "Show Popup",
+            contentDescription = "addAudioBTN",
             modifier = modifier
                 .clickable {
                     navigateToNewAudio()
                 }
-                .size(50.dp)
-                .border(width = 3.dp, color = Green200, shape = CircleShape)
+                .size(45.dp)
+                .border(width = 2.dp, color = Green200, shape = CircleShape)
         )
     }
 }

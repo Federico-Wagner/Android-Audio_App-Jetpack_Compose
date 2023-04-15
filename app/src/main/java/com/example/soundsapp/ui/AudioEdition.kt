@@ -260,8 +260,11 @@ fun EditAudioLayOut(audio : Audio,
             )
         }
         Spacer(modifier = modifier.padding(8.dp))
+        //AUDIO PLAYER CONTROLS
         PlayerControls( onTap, update, playerState, context, modifier = modifier)
-
+        //AUDIO TRIM UI
+//        SimpleRangeSlider() //RELEASE 2.0 FEATURE!!
+        //USER CONTROLS
         Row(modifier = modifier
             .fillMaxWidth()
             ,horizontalArrangement = Arrangement.SpaceBetween
@@ -293,5 +296,23 @@ fun EditAudioLayOut(audio : Audio,
                 Text(text = stringResource(R.string.save), color = Black900, fontSize = 17.sp)
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SimpleRangeSlider() {
+    val range = 1.0f..1000.0f
+//    val steps = 100
+    var price by remember { mutableStateOf(200.0f..400.0f) }
+
+    Column() {
+        RangeSlider(
+            values = price,
+            valueRange = range,
+//            steps = steps,
+            onValueChange = { price = it }
+        )
+        Text(text = price.toString())
     }
 }

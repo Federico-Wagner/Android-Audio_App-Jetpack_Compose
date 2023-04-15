@@ -24,7 +24,6 @@ import com.example.soundsapp.ui.theme.SoundsAppTheme
 
 
 class MainActivity : ComponentActivity() {
-
     val audioSearchBTN = fun() {
         val intent = Intent()
         intent.type = "audio/*"
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         resultLauncher.launch(intent)
     }
-
     var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val audioUri: Uri? = result.data?.data?.normalizeScheme()
@@ -45,19 +43,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-//    val audiosDataBase:  Observable<Audio> = Observable<Audio>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //WARMUP
         DataBase.createDB(applicationContext)
-        if(DataBase.getAllGroups().size == 0){
-            DataBase.groupCreate("General", false)
-        }
+
         //DEBUG - DEVELOP
-        DataBase.showAllAudioRecords()
-        DataBase.showAllGroupsRecords()
+//        DataBase.showAllAudioRecords()
+//        DataBase.showAllGroupsRecords()
 //        DataBase.deleteAllRecords()
+//        DataBase.deleteGeneralGroup()
 //        FileManger.deleteAllFiles(applicationContext)
 
         setContent {

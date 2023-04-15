@@ -49,7 +49,7 @@ object addNewAudioScreenObjectStatus{
     var selectedAudioUserName: String = ""
     var selectedAudioFileName: String = ""
     var favorite: Boolean = false   //TODO hardcoded value
-    var groupId: Long = 1 //GENERAL GRP
+    var groupId: Long = 0 //NO GROUP
 
     var updateExternal : () -> Unit = fun(){} // The not null trick ;)
 
@@ -61,7 +61,7 @@ object addNewAudioScreenObjectStatus{
         this.selectedAudioUserName = ""
         this.selectedAudioFileName = ""
         this.favorite = false
-        this.groupId = 1
+        this.groupId = 0
         this.playerState = MediaPlayerFW.PlayerState.STOP
         this.updateExternal = fun(){} // The not null trick ;)
     }
@@ -119,6 +119,8 @@ fun AddAudioScreen(groups: List<Group>,
     var playerState by remember { mutableStateOf(addNewAudioScreenObjectStatus.playerState) }
 
     var mSelectedGroup by remember { mutableStateOf(groups[0]) }
+    addNewAudioScreenObjectStatus.groupId = mSelectedGroup.groupId
+
     val onGroupItemClick = fun(group: Group){
         mSelectedGroup = group
         addNewAudioScreenObjectStatus.groupId = group.groupId
