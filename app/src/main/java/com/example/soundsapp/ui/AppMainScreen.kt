@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.material.icons.sharp.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,20 +61,11 @@ fun MainScreen(soundsDBx: List<Audio>,
                 )
                 Text(text = stringResource(id = R.string.app_name),
                     style = MaterialTheme.typography.h4)
-
-                //IMPLEMENT DROP MENO HERE
                 DropDownSelector(
                     toGroupManager = { toGroupManager() },
                     toAboutScreen = { toAboutScreen() },
                     context = context
                 )
-//                Icon(
-//                    Icons.Sharp.MoreVert,
-//                    contentDescription = "group Manager",
-//                    modifier = modifier
-//                        .clickable { toGroupManager() }
-//                        .size(40.dp)
-//                )
             }
         },
         bottomBar = {
@@ -91,7 +81,7 @@ fun MainScreen(soundsDBx: List<Audio>,
                     Text(text = "Developed by Federico Wagner",
                         fontSize = 13.sp, modifier= Modifier.padding(bottom = 5.dp))
                     Spacer(modifier = modifier.padding(30.dp))
-                    addAudioBTN( navigateToNewAudio )
+                    AddAudioBTN( navigateToNewAudio )
                 }
                 Spacer(modifier = modifier.padding(5.dp))
             }
@@ -182,14 +172,14 @@ fun SoundCardDB( audio: Audio,
                  context: Context,
                  contentResolver : ContentResolver,
               modifier : Modifier = Modifier ) {
-    var playPause by remember { mutableStateOf(Icons.Rounded.PlayArrow) }
+    var playPauseIcon by remember { mutableStateOf(Icons.Rounded.PlayArrow) }
 
     val onFinish = fun(){
-        playPause = MediaPlayerFW.getIcon()
+        playPauseIcon = MediaPlayerFW.getIcon()
     }
     val onTap = fun(){
         MediaPlayerFW.tap(context, audio, onFinish)
-        playPause = MediaPlayerFW.getIcon()
+        playPauseIcon = MediaPlayerFW.getIcon()
     }
 
     //FAVORITE BORDER
@@ -219,7 +209,7 @@ fun SoundCardDB( audio: Audio,
             horizontalArrangement = Arrangement.SpaceBetween
         ){
 
-            PlayBTN(playPause, null, onTap, context = context)
+            PlayBTN(playPauseIcon, null, onTap, context = context)
 
             Text(text = audio.audioUserName,
                 modifier = modifier
@@ -249,7 +239,7 @@ fun SoundCardDB( audio: Audio,
 }
 
 @Composable
-fun addAudioBTN(navigateToNewAudio : () -> Unit , modifier : Modifier = Modifier){
+fun AddAudioBTN(navigateToNewAudio : () -> Unit , modifier : Modifier = Modifier){
     Box(modifier = modifier
         .clip(RoundedCornerShape(50)),
     ){

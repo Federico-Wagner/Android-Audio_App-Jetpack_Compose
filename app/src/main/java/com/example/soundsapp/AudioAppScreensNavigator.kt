@@ -68,7 +68,7 @@ fun NavigationAppBar(
 }
 
 @Composable
-fun AudioAppScreen(
+fun AudioAppScreensNavigator(
     audioSearchBTN: () -> Unit,
     context: Context,
     contentResolver : ContentResolver,
