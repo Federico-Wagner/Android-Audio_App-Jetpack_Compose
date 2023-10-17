@@ -70,16 +70,17 @@ fun MainScreen( soundsDBx: List<Audio>,
                     .fillMaxWidth()
                     .padding(start = 28.dp, end = 15.dp, top = 10.dp)){
                 Image(painter = painterResource(R.drawable.imagen1), contentDescription = "iconImg",
-                    modifier.size(40.dp)
+                    modifier.size(30.dp)
                 )
                 Text(text = stringResource(id = R.string.app_name),
-                    style = MaterialTheme.typography.h4)
+                    style = MaterialTheme.typography.h5,
+                modifier = modifier.padding(bottom = 8.dp))
                 Icon(
                     Icons.Sharp.MoreVert,
                     contentDescription = "group Manager",
                     modifier = modifier
                         .clickable { search() }
-                        .size(40.dp)
+                        .size(30.dp)
                 )
             }
         },
@@ -88,7 +89,6 @@ fun MainScreen( soundsDBx: List<Audio>,
                 modifier = modifier
                     .fillMaxWidth()
                     .background(color = Color.Black)){
-//                Spacer(modifier = modifier.padding(5.dp))
                 Row( modifier = modifier.fillMaxWidth(0.9F),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically)
@@ -98,7 +98,6 @@ fun MainScreen( soundsDBx: List<Audio>,
                     Spacer(modifier = modifier.padding(30.dp))
                     addAudioBTN( navigateToNewAudio )
                 }
-                Spacer(modifier = modifier.padding(5.dp))
             }
         }
     ) {
@@ -121,7 +120,7 @@ fun SoundsList(groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
                context: Context,
                contentResolver : ContentResolver) {
-    val modifier = Modifier.padding(bottom = 75.dp)
+    val modifier = Modifier.padding(bottom = 65.dp)
     Column(){
         LazyVerticalGrid(
             cells = GridCells.Fixed(1),
@@ -267,8 +266,8 @@ fun addAudioBTN(navigateToNewAudio : () -> Unit , modifier : Modifier = Modifier
                 .clickable {
                     navigateToNewAudio()
                 }
-                .size(45.dp)
-                .border(width = 2.dp, color = Green200, shape = CircleShape)
+                .size(40.dp)
+                .border(width = 1.dp, color = Green200, shape = CircleShape)
         )
     }
 }
