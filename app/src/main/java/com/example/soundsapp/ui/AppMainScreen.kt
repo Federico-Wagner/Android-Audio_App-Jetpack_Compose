@@ -121,11 +121,14 @@ fun SoundsList(groupsDB: List<Group>,
                navigateToAudioDetail: () -> Unit,
                context: Context,
                contentResolver : ContentResolver) {
+    val modifier = Modifier.padding(bottom = 75.dp)
     Column(){
-        LazyVerticalGrid(cells = GridCells.Fixed(1)){
+        LazyVerticalGrid(
+            cells = GridCells.Fixed(1),
+            modifier = modifier
+        ){
             items(groupsDB){ group -> GroupView(group, navigateToAudioDetail, context, contentResolver)}
         }
-        Spacer(modifier = Modifier.padding(50.dp))
     }
 }
 
